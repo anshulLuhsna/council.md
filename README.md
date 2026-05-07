@@ -23,7 +23,7 @@ It works with Claude, ChatGPT, Gemini, local models, or any combination — incl
    - What's the decision?
    - What does a good outcome look like?
    - Anything we must not miss?
-3. Confirm the setup the coordinator proposes. The coordinator picks the profile, agents, and defaults — type `go` or tweak.
+3. Confirm the setup the coordinator proposes. The coordinator picks the profile, agents, and **default model picks** (see **Default model heuristics** in [`templates/coordinator.md`](templates/coordinator.md): Claude for technical roles, Perplexity for financial / cited facts, Grok for adversarial reviewer roles, ChatGPT for neutral / synthesizer) — type `go` or tweak.
 4. Follow the coordinator's instructions. It tells you which model to open in a new tab and exactly what to paste. You paste replies back.
 5. Answer one reflection question. State your decision. Done.
 
