@@ -132,12 +132,21 @@ The protocol supports multiple rounds natively.
 
 **How to run a second round:**
 1. After all agents have contributed blind in round 1, give each agent the full `discussion.md`
-2. Each agent writes a new contribution below their round 1 section, clearly labeled:
+2. Each agent appends a `#### Round 2` block **inside** their existing `### Agent:` section — immediately after their Round 1 `#### Confidence` line and before the next `### Agent:` heading:
    ```markdown
-   ### Agent: Strategist (Round 2)
+   ### Agent: Strategist
+   #### Position
+   …
+   #### Confidence
+   MEDIUM — …
+
+   #### Round 2
+   … counterpoints and updated reasoning …
    ```
-3. In round 2, agents focus on `## Counterpoints` — responding to specific disagreements
+3. In round 2, agents focus on `#### Counterpoints` — responding to specific disagreements by name
 4. Run the synthesizer after all round 2 contributions
+
+**Do not** create a new `### Agent: Strategist (Round 2)` heading — all rounds for an agent live inside one `### Agent:` block. SPEC-core §2 requires agent contributions to stay anchored under a single `### Agent:` heading per agent.
 
 For most decisions, 2 rounds is sufficient. 3+ rounds is useful for high-stakes decisions with major disagreements that need resolution before synthesis.
 
