@@ -83,11 +83,33 @@ Give the synthesizer `context.md` + `discussion.md` (+ `discussion-r2.md` if spl
 
 The synthesizer writes output under **`## Council Synthesis`** in **`synthesizer.md` only** — **not** in `discussion.md`.
 
-### Step 6: Decide
+### Step 6: Optional summary UI
+
+After synthesis, the coordinator may ask whether you want an optional `summary.html`.
+
+This is a static, non-authoritative briefing page for humans who want a clearer walkthrough before deciding. It can show:
+
+- a plain-language overview
+- one distilled summary per agent
+- agreements, conflicts, and open questions
+- ranked kill risks
+- candidate options
+- a reflection prompt
+
+The optional summary is generated from `synthesizer.md` and may consult `discussion.md` for short quotes or attribution. The summarizer's job is translation and presentation only:
+
+- simplify language
+- preserve disagreements
+- preserve attribution
+- preserve the synthesizer's risk and option structure
+
+It must not invent new risks, new options, fake consensus, or a final recommendation. If `summary.html` conflicts with the markdown files, the markdown files win.
+
+### Step 7: Decide
 
 Human writes **`## Human Decision`** in **`synthesizer.md`**. Update **`status:`** to `decided`, then `archived`.
 
-### Step 7: Reopen (if needed)
+### Step 8: Reopen (if needed)
 
 If new contributions are required after synthesis started, follow **SPEC-rules §4.3** — reopen to `contributing`, do not silently append while `synthesizing`.
 
@@ -96,6 +118,21 @@ If new contributions are required after synthesis started, follow **SPEC-rules �
 ## What the synthesizer does (and does not do)
 
 Cartography, not judgment — with **evidence anchors** (quotes / heading pointers) per **SPEC-rules §8**.
+
+Typical synthesis sections:
+
+| Section | Plain-language meaning |
+|---|---|
+| `### Agreement Map` | Where agents converge. Agreement is a signal, not proof. |
+| `### Conflict Map` | Where agents disagree. Conflicts should stay sharp and name what is at stake. |
+| `### Calibration Flags` | Places where an agent's confidence may be higher than its evidence supports. |
+| `### Open Questions` | Missing information that could change the decision. |
+| `### Candidate Options` | Possible paths with tradeoffs. The synthesizer does not pick a winner. |
+| `### Synthesis Confidence` | Whether the synthesis is complete enough to rely on: `COMPLETE`, `PARTIAL`, or `INCOMPLETE`. |
+
+Some sessions also ask the synthesizer for **kill risks**: the few risks serious enough to kill the project, product, strategy, or decision if true. Kill risks are stronger than generic concerns; they should be specific, evidence-backed, and often tagged `fatal`, `manageable`, or `unknown`.
+
+See [`glossary.md`](glossary.md) for full definitions.
 
 Optional: a **second model** as synthesis auditor (see `docs/anti-sycophancy.md`).
 

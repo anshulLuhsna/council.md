@@ -46,7 +46,45 @@ A session is a folder of markdown files. Six core files, all human-readable:
 | `synthesizer.md` | Council synthesis + your final decision |
 | `agents/[name].md` | One file per agent role |
 
-Optional: `drafts/[slug].md` for blind round, `discussion-r1.md`, `discussion-r2.md` for round rollover.
+Optional: `drafts/[slug].md` for blind round, `discussion-r1.md`, `discussion-r2.md` for round rollover, and `summary.html` as a non-authoritative plain-language briefing after synthesis.
+
+---
+
+## Reading the synthesis
+
+The synthesizer is a map, not a verdict. Common output terms:
+
+| Term | Meaning |
+|---|---|
+| Agreement | A point where multiple agents independently converge. Not automatic truth, but a stable signal. |
+| Conflict | A real disagreement the human should not average away. Good conflicts name each side, the stakes, and what would resolve it. |
+| Open question | Missing information that could materially change the decision. |
+| Candidate option | A possible path with tradeoffs and preconditions. The synthesizer lists options but does not pick a winner. |
+| Kill risk | A risk that could kill the project, product, strategy, or decision if it turns out to be true. Stronger than a generic concern. |
+| Calibration flag | A warning that an agent's confidence may be too high for the evidence it gave. |
+| Synthesis confidence | How complete the synthesis map is: `COMPLETE`, `PARTIAL`, or `INCOMPLETE`. |
+
+See [`docs/glossary.md`](docs/glossary.md) for the full glossary.
+
+---
+
+## Optional summary UI
+
+After `synthesizer.md` is complete, the coordinator may offer an optional `summary.html`.
+
+`summary.html` is a static briefing page that makes the synthesis easier to read:
+
+- overview of the decision
+- plain-language agent summaries
+- agreements and conflicts
+- top kill risks
+- candidate options
+- open questions
+- a reflection prompt before the human decision
+
+The summary UI is generated from `synthesizer.md` and may use `discussion.md` only for quotes or attribution. A summarizer model can translate the synthesis into structured UI data, but it must not add new opinions, risks, options, or recommendations.
+
+`summary.html` is a presentation layer only. The source of truth remains `discussion.md`, `synthesizer.md`, and `votes.md`.
 
 ---
 
@@ -121,6 +159,7 @@ No network, no API calls. See [`cli/README.md`](cli/README.md).
 | [`SPEC-core.md`](SPEC-core.md) | Compliance contract — what must not change |
 | [`SPEC-rules.md`](SPEC-rules.md) | Operational rules — workflows, YAML, synthesizer behavior, locks |
 | [`docs/how-it-works.md`](docs/how-it-works.md) | Phase flow and walkthrough |
+| [`docs/glossary.md`](docs/glossary.md) | Plain-language definitions for synthesis terms like agreement, conflict, kill risk, and candidate option |
 | [`docs/anti-sycophancy.md`](docs/anti-sycophancy.md) | How the protocol prevents false consensus |
 | [`docs/customization.md`](docs/customization.md) | Normative core vs. forks |
 | [`docs/invocation-guides.md`](docs/invocation-guides.md) | Model-specific setup (Claude, ChatGPT, Gemini, local) |

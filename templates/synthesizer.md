@@ -38,6 +38,18 @@ Do **not** write synthesis into `discussion.md`.
 
 <!-- Replace instructional comments and [TBD…] lines with real synthesis. Delete comments when done. -->
 
+<!--
+Terminology:
+- Agreement Map: where multiple agents converge; agreement is signal, not proof.
+- Conflict Map: real disagreements; preserve positions, stakes, and resolution paths.
+- Calibration Flags: places where confidence may be higher than the evidence supports.
+- Open Questions: missing information that could materially change the decision.
+- Candidate Options: possible paths with tradeoffs; do not pick a winner.
+- Synthesis Confidence: COMPLETE / PARTIAL / INCOMPLETE describes how complete the map is.
+- Kill Risk (if the session asks for it): a risk that could kill the project, product, strategy, or decision if true. Prefer verdicts: fatal / manageable / unknown.
+Full definitions: docs/glossary.md.
+-->
+
 ### Agreement Map
 
 <!--
