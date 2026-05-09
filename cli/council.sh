@@ -7,6 +7,7 @@
 #   council status             Show current phase, contributions, vote status
 #   council next               Print what to do next
 #   council validate           Check all required files and sections
+#   council summary            Generate optional summary.html from synthesizer.md UI data
 #   council help               Show this help
 
 set -euo pipefail
@@ -42,6 +43,7 @@ Commands:
   status [dir]           Show current phase, contributions, and vote status
   next [dir]             Print what to do next in the session
   validate [--strict] [dir]   Check all required files, headings, and frontmatter
+  summary [dir]               Generate optional summary.html from synthesizer.md
   remind [dir]           Post-decision review due / overdue (requires python3)
   help                   Show this message
 
@@ -246,6 +248,15 @@ cmd_remind() {
   exit 1
 }
 
+cmd_summary() {
+  if command -v python3 &>/dev/null; then
+    python3 "$SCRIPT_DIR/council.py" summary "$@"
+    return
+  fi
+  err "summary requires python3 (install Python 3 or use the UI template manually)"
+  exit 1
+}
+
 # ─── VALIDATE (fallback) ─────────────────────────────────────────────────────
 
 cmd_validate() {
@@ -411,6 +422,7 @@ case "$command" in
   status)   cmd_status "$@" ;;
   next)     cmd_next "$@" ;;
   validate) cmd_validate "$@" ;;
+  summary)  cmd_summary "$@" ;;
   remind)   cmd_remind "$@" ;;
   help|--help|-h) usage ;;
   *)

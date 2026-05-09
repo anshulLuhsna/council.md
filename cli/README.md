@@ -135,6 +135,27 @@ The **`council.sh`** implementation delegates `validate`, `status`, `next`, and 
 
 Returns a non-zero exit code on errors (useful in CI or pre-session checks).
 
+### `council summary [dir]`
+
+Generate an optional session-local `summary.html` from the structured UI payload inside `synthesizer.md`.
+
+```bash
+council summary
+council summary ./my-decision
+```
+
+Behavior:
+
+- reads `## Summary UI Data` from `synthesizer.md`
+- expects exactly one fenced `json` block in that section
+- validates required keys
+- injects the payload into the canonical standalone HTML template
+- writes `summary.html` into the session root
+
+If the UI data section is missing or malformed, the command fails clearly without affecting protocol compliance.
+
+`summary.html` is optional and non-authoritative. The source of truth remains `discussion.md`, `synthesizer.md`, and `votes.md`.
+
 ---
 
 ### `council remind [dir]`
@@ -171,6 +192,7 @@ Everything the CLI does can be done manually:
 - `status` = read `discussion.md` and `votes.md`
 - `next` = read `votes.md` status and decide what to do
 - `validate` / `validate --strict` = structural checks
+- `summary` = translate `## Summary UI Data` into a standalone `summary.html`
 - `remind` = grep **`Scheduled review date:`** in `synthesizer.md`
 
 If you are on a system without bash or Python, you do not need the CLI. Just work with the files directly.

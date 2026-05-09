@@ -2,12 +2,11 @@
 <html lang="en">
 <!-- Optional briefing generated from synthesizer.md; not authoritative. -->
 <!--
-  README:
-  This is a self-contained, offline-capable briefing UI prototype.
-  To update this with real data, replace the JSON payload inside the
-  <script type="application/json" id="council-summary"> block at the bottom
-  of this file. The Vanilla JS engine will re-render automatically.
-  Source of truth remains `synthesizer.md`.
+  Canonical standalone renderer template for council.md summary artifacts.
+  The CLI injects a session's `## Summary UI Data` JSON payload into the
+  <script type="application/json" id="council-summary"> block below and writes
+  the result as a session-local `summary.html`.
+  Source of truth remains `synthesizer.md` + session markdown.
 -->
 <head>
   <meta charset="UTF-8">
@@ -261,98 +260,61 @@
     <p>Council • v2.1.0-STABLE</p>
   </footer>
 
-  <!-- Mock Data Payload -->
+  <!-- Session Data Payload -->
   <script type="application/json" id="council-summary">
   {
-    "session": { "title": "Acquisition of Loomis Tech", "type": "Decision", "synthesisConfidence": "PARTIAL" },
+    "session": { "title": "Council Summary", "type": "Decision", "synthesisConfidence": "PARTIAL" },
     "overview": {
-      "primaryQuestion": "Should we acquire Loomis Tech for $20M to bypass a 12-month internal build?",
-      "primaryTension": "Immediate GTM expansion vs. absorbing critical security and culture liabilities.",
-      "nonRecommendationCopy": "The council leans toward caution, framing the acquisition not as an immediate win, but as buying a different set of problems.",
+      "primaryQuestion": "Run `council summary <session-dir>` to generate a session-specific briefing.",
+      "primaryTension": "This page is a renderer template until a session payload is injected.",
+      "nonRecommendationCopy": "This UI is a translation layer, not a decision-maker. Source of truth remains synthesizer.md.",
       "executiveBrief": [
-        "Acquiring Loomis Tech gives us instantaneous access to 300+ mid-market customers and pre-built integrations our sales team is currently starved for.",
-        "However, their core product operates on outdated infrastructure with known security vulnerabilities, and their engineering culture is highly misaligned with ours.",
-        "The window for an LOI closes this Friday. A decision requires weighing the cost of missed sales against the unquantified cost of a massive technical remediation."
+        "The synthesizer can now emit `## Summary UI Data` inside `synthesizer.md`.",
+        "The CLI reads that JSON payload, validates it, and writes a self-contained `summary.html` into the session root.",
+        "If this page conflicts with the markdown session files, the markdown files win."
       ]
     },
     "agents": [
       {
-        "name": "Sarah",
-        "lens": "Revenue & Growth (CRO)",
-        "plain": "We are losing $2M a quarter because we lack these integrations. Loomis plugs this hole on day one.",
-        "warning": "If we build this internally, our competitors will lock up the market by Q3.",
-        "changeOrTest": "Verify their customer churn risk—are they churning because the tech is slow?",
-        "confidence": "HIGH",
-        "quote": "This isn't about their code, it's about buying their market share before DeltaCorp does."
-      },
-      {
-        "name": "Marcus",
-        "lens": "Engineering (CTO)",
-        "plain": "Their stack is a liability. It's written in early-era PHP and has zero test coverage.",
-        "warning": "Remediating this will pull 40% of our core team off our primary roadmap for six months.",
-        "changeOrTest": "Conduct a deep-dive security audit. If they fail SOC2, we walk.",
-        "confidence": "HIGH",
-        "quote": "We'd be buying a burning building. The tech debt alone might cost more than the $20M price tag."
-      },
-      {
-        "name": "Elena",
-        "lens": "Product Strategy (VP Prod)",
-        "plain": "Loomis has the features, but their UX is terrible. It will dilute our premium brand feeling.",
-        "warning": "Customers might assume our core product is becoming just as clunky.",
-        "changeOrTest": "Can we white-label their backend and put our front-end on it within 30 days?",
+        "name": "Synthesizer",
+        "lens": "Summary UI payload",
+        "plain": "The generated session payload will replace this placeholder card.",
+        "warning": "Do not hand-edit the rendered HTML as if it were the source of truth.",
+        "changeOrTest": "Generate a real session summary from a completed synthesizer.md file.",
         "confidence": "MEDIUM",
-        "quote": "A bad user experience is contagious."
+        "quote": "summary.html is optional and non-authoritative."
       }
     ],
     "agreements": [
       {
-        "title": "Clear Market Demand",
-        "summary": "There is unified agreement that the integrations Loomis has are urgently needed by our customers.",
-        "agents": ["Sarah", "Marcus", "Elena"],
-        "quote": "We all agree we need what they built, yesterday."
-      },
-      {
-        "title": "Technical Sub-standard",
-        "summary": "Even the growth team acknowledges the Loomis tech stack is inherently weak and not scalable.",
-        "agents": ["Marcus", "Sarah"],
-        "quote": "No one is pretending this is good code."
+        "title": "Derived from synthesizer.md",
+        "summary": "The renderer expects structured UI data to come from the same synthesis file as the official council map.",
+        "agents": ["Synthesizer"],
+        "quote": "The UI payload is a translation layer only."
       }
     ],
     "conflicts": [
       {
-        "title": "Speed to Market vs. Technical Stability",
-        "stakes": "Capturing multi-million dollar deals vs. risking a platform outage.",
-        "sideA": { "who": "Sarah (Revenue)", "position": "Buy it, run it as a standalone legacy product, and reap the ARR now.", "quote": "We can fix bugs, we can't invent time." },
-        "sideB": { "who": "Marcus (Eng)", "position": "A standalone product still impacts support and on-call. We must pause to fix it first.", "quote": "A standalone trainwreck is still a trainwreck." },
-        "resolver": "Assess if Loomis can truly run isolated from our main database architecture."
+        "title": "Authoritative markdown vs. presentation layer",
+        "stakes": "Keeping the UI useful without letting it become a second source of truth.",
+        "sideA": { "who": "Protocol", "position": "The HTML should be easy to consume and session-local.", "quote": "summary.html is a presentation layer only." },
+        "sideB": { "who": "Protocol", "position": "The official record must remain in synthesizer.md and the session markdown.", "quote": "If summary.html conflicts with the markdown files, the markdown files win." },
+        "resolver": "Always derive the HTML from synthesizer.md rather than editing it by hand."
       }
     ],
-    "topKillRisks": [
-      { "rank": 1, "title": "Undisclosed Security Breach", "verdict": "fatal", "why": "Loomis lacks modern logging. If they are already compromised, we buy the liability and damage our own brand.", "quote": "We don't know what we don't know." },
-      { "rank": 2, "title": "Mass Attrition of Loomis Devs", "verdict": "manageable", "why": "If their devs leave, we are stuck maintaining undocumented legacy code.", "quote": "Offer strong retention bonuses to 3 key architects." },
-      { "rank": 3, "title": "Slower than expected UX revamp", "verdict": "unknown", "why": "If we can't reskin it quickly, users will complain about the disjointed experience.", "quote": "We might be stuck with two UIs for a year." }
-    ],
+    "topKillRisks": [],
     "candidatePaths": [
       {
-        "name": "The Aggressive Acquisition",
-        "summary": "Proceed with the $20M LOI, keep Loomis as a standalone product indefinitely.",
-        "pros": ["Immediate revenue bump", "Stops competitors from buying"],
-        "cons": ["High ongoing maintenance", "Brand dilution"],
-        "preconditions": ["Loomis passes minimum viable security audit"],
-        "leansFrom": ["Sarah"]
-      },
-      {
-        "name": "The Strategic Deferral (Build)",
-        "summary": "Walk away, reallocate $5M to hire a tiger team to build the features internally.",
-        "pros": ["Total control over quality", "Zero legacy debt"],
-        "cons": ["Lost revenue for 9-12 months", "Market lock-in by competitors"],
-        "preconditions": ["Board approves budget reallocation"],
-        "leansFrom": ["Marcus"]
+        "name": "Generate a real session briefing",
+        "summary": "Use `council summary` after synthesis to turn the structured payload into a standalone summary artifact.",
+        "pros": ["Offline-capable", "Session-local", "Derived from the same synthesis file"],
+        "cons": ["Requires the synthesizer to produce valid JSON"],
+        "preconditions": ["Completed synthesizer.md with `## Summary UI Data`"],
+        "leansFrom": ["Synthesizer"]
       }
     ],
     "openQuestions": [
-      { "q": "Exactly how isolated is the Loomis database from their public facing API?", "why": "Crucial for calculating integration timelines." },
-      { "q": "Are the Loomis contracts structured such that we can easily migrate their users to our terms of service?", "why": "Determines if we lock in the ARR or face churn immediately upon acquisition." }
+      { "q": "Has the synthesizer filled `## Summary UI Data` with valid JSON?", "why": "The CLI renderer depends on this payload." }
     ]
   }
   </script>
@@ -365,7 +327,7 @@
       try {
         data = JSON.parse(dataStr);
       } catch(e) {
-        document.querySelector('.content-wrapper').innerHTML = "<h1 style='color:red;'>Initialization Error: Invalid JSON Mock Data</h1>";
+        document.querySelector('.content-wrapper').innerHTML = "<h1 style='color:red;'>Initialization Error: Invalid summary UI JSON payload</h1>";
         return;
       }
 
@@ -442,7 +404,7 @@
           <div class="step-label">Stage 3 of 8</div>
           <h2 class="step-title">Points of Agreement</h2>
           <div class="agent-grid">
-            ${data.agreements.map(a => `
+            ${(data.agreements.length ? data.agreements.map(a => `
               <div class="briefing-card">
                 <h3 style="font-family:var(--font-serif); font-size:1.2rem; margin-bottom:12px; color:#111; font-weight:400;">${a.title}</h3>
                 <div style="color:var(--text-muted); margin-bottom:16px; font-size:0.65rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em;">
@@ -451,14 +413,14 @@
                 <p style="font-size:0.95rem; line-height:1.5; margin-bottom:20px; color:#333; font-weight:300;">${a.summary}</p>
                 ${a.quote ? `<div class="serif-quote" style="font-size:0.85rem;">${a.quote}</div>` : ''}
               </div>
-            `).join('')}
+            `).join('') : `<div class="briefing-card"><p style="font-size:0.95rem; color:#555;">No explicit agreement summary was provided for this session.</p></div>`)}
           </div>
         `,
         conflicts: () => `
           <div class="step-label">Stage 4 of 8</div>
           <h2 class="step-title">Critical Conflicts</h2>
           <div>
-            ${data.conflicts.map(c => `
+            ${(data.conflicts.length ? data.conflicts.map(c => `
               <div class="conflict-card">
                 <h3 class="conflict-title">${c.title}</h3>
                 
@@ -486,7 +448,7 @@
                   ${c.resolver}
                 </div>
               </div>
-            `).join('')}
+            `).join('') : `<div class="briefing-card"><p style="font-size:0.95rem; color:#555;">No explicit conflict summary was provided for this session.</p></div>`)}
           </div>
         `,
         risks: () => `
@@ -494,7 +456,7 @@
           <h2 class="step-title" style="margin-bottom:8px;">Top Kill Risks</h2>
           <p style="margin-bottom:32px; font-size:1rem; color:var(--text-muted); font-weight:300;">The primary mechanisms by which this decision fails catastrophically.</p>
           <div>
-            ${data.topKillRisks.map(r => `
+            ${(data.topKillRisks.length ? data.topKillRisks.map(r => `
               <div class="risk-item ${r.rank === 1 ? 'risk-item-1' : ''}">
                 <div class="risk-rank ${r.rank === 1 ? 'risk-rank-1' : ''}">#${r.rank}</div>
                 <div class="risk-content">
@@ -506,14 +468,14 @@
                   <div class="serif-quote" style="font-size:1.05rem; margin:0;">"${r.quote}"</div>
                 </div>
               </div>
-            `).join('')}
+            `).join('') : `<div class="briefing-card"><p style="font-size:0.95rem; color:#555;">This session did not include a top-kill-risks section.</p></div>`)}
           </div>
         `,
         paths: () => `
           <div class="step-label">Stage 6 of 8</div>
           <h2 class="step-title">Candidate Paths <span style="font-weight:400; font-size:1.1rem; color:var(--text-muted); font-family:var(--font-sans); display:block; margin-top:8px;">Council leans (not crowned winners)</span></h2>
           <div>
-            ${data.candidatePaths.map(p => `
+            ${(data.candidatePaths.length ? data.candidatePaths.map(p => `
               <div class="path-card">
                 <div class="path-header">
                   <h3 class="path-title">${p.name}</h3>
@@ -536,7 +498,7 @@
                   <strong style="color:#444;">Required Preconditions:</strong> ${p.preconditions.join(', ')}
                 </div>
               </div>
-            `).join('')}
+            `).join('') : `<div class="briefing-card"><p style="font-size:0.95rem; color:#555;">No candidate paths were included in the summary payload.</p></div>`)}
           </div>
         `,
         'open-questions': () => `
@@ -544,12 +506,12 @@
           <h2 class="step-title">Open Questions</h2>
           <p style="margin-bottom:32px; font-size:1.1rem; color:var(--text-muted);">Human resolution or discovery required prior to final decision.</p>
           <ul class="oq-list">
-            ${data.openQuestions.map(q => `
+            ${(data.openQuestions.length ? data.openQuestions.map(q => `
               <li class="oq-item">
                 <div class="oq-q">${q.q}</div>
                 <div class="oq-why"><strong style="color:#333;">Why this matters:</strong> ${q.why}</div>
               </li>
-            `).join('')}
+            `).join('') : `<li class="oq-item"><div class="oq-q">No open questions recorded</div><div class="oq-why">The summary payload did not include unresolved questions for this session.</div></li>`)}
           </ul>
         `,
         decide: () => `

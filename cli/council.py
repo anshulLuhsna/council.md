@@ -8,11 +8,13 @@ Usage:
     council status [dir]            Show current phase and contribution status
     council next [dir]              Print what to do next
     council validate [--strict] [dir]  Check files (strict = CI-style errors)
+    council summary [dir]           Generate optional summary.html from synthesizer.md UI data
     council remind [dir]            Post-decision review due / overdue (synthesizer.md)
     council help                    Show this message
 """
 
 import argparse
+import json
 import re
 import shutil
 import sys
@@ -250,6 +252,98 @@ def extract_post_decision_review_section(synth_text: str) -> str:
     return tail[: nxt.start()] if nxt else tail
 
 
+def extract_markdown_h2_section(text: str, heading: str) -> str:
+    m = re.search(rf"^##\s+{re.escape(heading)}\s*$", text, re.MULTILINE)
+    if not m:
+        return ""
+    tail = text[m.end() :]
+    nxt = re.search(r"^## [^\s]", tail, re.MULTILINE)
+    return tail[: nxt.start()] if nxt else tail
+
+
+def extract_summary_ui_json(synth_text: str) -> tuple[dict | None, str | None]:
+    sec = extract_markdown_h2_section(synth_text, "Summary UI Data")
+    if not sec.strip():
+        return None, "Missing `## Summary UI Data` section in synthesizer.md"
+    fence = re.search(r"```json\s*(\{.*?\})\s*```", sec, re.DOTALL)
+    if not fence:
+        return None, "Missing fenced ```json block under `## Summary UI Data`"
+    try:
+        return json.loads(fence.group(1)), None
+    except json.JSONDecodeError as exc:
+        return None, f"Malformed JSON in `## Summary UI Data`: {exc}"
+
+
+def validate_summary_payload(data: dict) -> list[str]:
+    errs: list[str] = []
+    if not isinstance(data, dict):
+        return ["Summary UI data must be a JSON object"]
+
+    required_top = ["session", "overview", "agents", "agreements", "conflicts", "openQuestions"]
+    for key in required_top:
+        if key not in data:
+            errs.append(f"Missing top-level key: {key}")
+
+    session = data.get("session")
+    if not isinstance(session, dict):
+        errs.append("session must be an object")
+    else:
+        for key in ("title", "type", "synthesisConfidence"):
+            if not isinstance(session.get(key), str) or not session.get(key, "").strip():
+                errs.append(f"session.{key} must be a non-empty string")
+
+    overview = data.get("overview")
+    if not isinstance(overview, dict):
+        errs.append("overview must be an object")
+    else:
+        for key in ("primaryQuestion", "primaryTension", "nonRecommendationCopy"):
+            if not isinstance(overview.get(key), str) or not overview.get(key, "").strip():
+                errs.append(f"overview.{key} must be a non-empty string")
+        if not isinstance(overview.get("executiveBrief"), list) or not overview.get("executiveBrief"):
+            errs.append("overview.executiveBrief must be a non-empty array")
+
+    if not isinstance(data.get("agents"), list) or not data.get("agents"):
+        errs.append("agents must be a non-empty array")
+    if not isinstance(data.get("agreements"), list):
+        errs.append("agreements must be an array")
+    if not isinstance(data.get("conflicts"), list):
+        errs.append("conflicts must be an array")
+    if not isinstance(data.get("openQuestions"), list):
+        errs.append("openQuestions must be an array")
+    if "topKillRisks" in data and not isinstance(data.get("topKillRisks"), list):
+        errs.append("topKillRisks must be an array when present")
+    if "candidatePaths" in data and not isinstance(data.get("candidatePaths"), list):
+        errs.append("candidatePaths must be an array when present")
+    if "candidateOptions" in data and not isinstance(data.get("candidateOptions"), list):
+        errs.append("candidateOptions must be an array when present")
+
+    return errs
+
+
+def normalize_summary_payload(data: dict) -> dict:
+    out = dict(data)
+    if "candidatePaths" not in out and "candidateOptions" in out:
+        out["candidatePaths"] = out["candidateOptions"]
+    out.setdefault("topKillRisks", [])
+    out.setdefault("candidatePaths", [])
+    return out
+
+
+def render_summary_html(template_text: str, payload: dict) -> str:
+    json_text = json.dumps(payload, indent=2, ensure_ascii=False)
+    replacement = f'<script type="application/json" id="council-summary">\n{json_text}\n  </script>'
+    rendered = re.sub(
+        r'<script type="application/json" id="council-summary">.*?</script>',
+        replacement,
+        template_text,
+        count=1,
+        flags=re.DOTALL,
+    )
+    if rendered == template_text:
+        raise ValueError("Template missing council-summary JSON block")
+    return rendered
+
+
 def parse_scheduled_review_date(section: str) -> datetime | None:
     for pat in (
         r"\*\*Scheduled review date:\*\*\s*(\d{4}-\d{2}-\d{2})",
@@ -407,9 +501,12 @@ def cmd_next(args):
         info("Deliberation closed. Run the synthesizer.")
         print("  Fill ## Council Synthesis in synthesizer.md only (not discussion.md).")
         print("  Inputs: context.md + discussion.md + votes.md + synthesizer.md")
+        print("  Optional: also fill ## Summary UI Data so you can generate summary.html.")
 
     elif status == "decided":
-        ok("Decision recorded — confirm Human Decision in synthesizer.md, then archive.")
+        ok("Decision recorded.")
+        print("  Optional: run `council summary` to generate summary.html from synthesizer.md.")
+        print("  Then archive when you are done.")
 
     elif status == "archived":
         ok("Session archived.")
@@ -473,6 +570,44 @@ def cmd_remind(args):
         warn("Due today — fill **Outcome observed:** when you have signal.")
     else:
         info(f"Not yet due (in {(due_d - today).days} days).")
+
+
+# ─── SUMMARY ─────────────────────────────────────────────────────────────────
+
+def cmd_summary(args):
+    council_dir = Path(args.dir) if args.dir else DEFAULT_DIR
+    require_council_dir(council_dir)
+
+    synth_path = council_dir / "synthesizer.md"
+    if not synth_path.exists():
+        err("synthesizer.md not found")
+        sys.exit(1)
+
+    template_path = REPO_ROOT / "ui" / "public" / "summary.html"
+    if not template_path.exists():
+        err(f"Summary template not found: {template_path}")
+        sys.exit(1)
+
+    payload, parse_err = extract_summary_ui_json(synth_path.read_text())
+    if parse_err:
+        err(parse_err)
+        info("Add a valid `## Summary UI Data` section to synthesizer.md, then rerun `council summary`.")
+        sys.exit(1)
+
+    assert payload is not None
+    validation_errors = validate_summary_payload(payload)
+    if validation_errors:
+        err("Summary UI data is incomplete:")
+        for msg in validation_errors:
+            err(f"  {msg}")
+        sys.exit(1)
+
+    payload = normalize_summary_payload(payload)
+    html = render_summary_html(template_path.read_text(), payload)
+    out_path = council_dir / "summary.html"
+    out_path.write_text(html)
+    ok(f"Generated {out_path}")
+    info("This artifact is optional and non-authoritative. Source of truth remains synthesizer.md + session markdown.")
 
 
 # ─── VALIDATE ────────────────────────────────────────────────────────────────
@@ -711,6 +846,12 @@ def main():
                             help="Treat SPEC-core §2-oriented issues as errors (CI; SPEC-core §3)")
     p_validate.add_argument("dir", nargs="?", default=None)
 
+    p_summary = subparsers.add_parser(
+        "summary",
+        help="Generate optional summary.html from synthesizer.md UI data",
+    )
+    p_summary.add_argument("dir", nargs="?", default=None)
+
     p_remind = subparsers.add_parser(
         "remind",
         help="Post-decision review due / overdue (reads synthesizer.md)",
@@ -729,6 +870,8 @@ def main():
         cmd_next(args)
     elif args.command == "validate":
         cmd_validate(args)
+    elif args.command == "summary":
+        cmd_summary(args)
     elif args.command == "remind":
         cmd_remind(args)
     elif args.command == "help" or args.command is None:
