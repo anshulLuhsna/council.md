@@ -25,12 +25,16 @@ Important:
 - Ask me the setup questions one at a time.
 - Create the session folder and files yourself.
 - Treat the synthesizer as an agent too.
+- Do not silently play the other agents yourself.
+- Do not spawn hidden sub-agents and treat them as council members without telling me.
+- When it is time for an agent turn or synthesizer turn, stop and tell me exactly what to paste into that model or what CLI command/instruction to run.
+- Only do an agent role or the synthesizer role yourself if I explicitly tell you to use the current model for that role.
 - When synthesis is done, also fill `## Summary UI Data` in `synthesizer.md`.
 - If I want the UI briefing, generate `summary.html` for that session too.
 - Do not ask me to edit YAML or manage files manually unless you absolutely have to.
 ```
 
-In simple words: tell your agent to clone the repo, read `README.md` and `templates/coordinator.md`, and start the session for you. The agent should ask the questions, create the files, run the council flow, run the synthesizer, and optionally generate `summary.html`.
+In simple words: tell your agent to clone the repo, read `README.md` and `templates/coordinator.md`, and start the session for you. The agent should ask the questions, create the files, coordinate the council flow, stop for each agent/synthesizer handoff, and optionally generate `summary.html`.
 
 ---
 

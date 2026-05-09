@@ -4,6 +4,8 @@ How to run a council.md session in each major AI interface.
 
 The protocol is the same regardless of which model or interface you use. What changes is how you load files into context. This guide covers the most common setups.
 
+Important: the coordinator is a coordinator, not the whole council. By default it should not silently impersonate the other agents or the synthesizer. It should hand off each turn to the user’s chosen web or CLI model unless the human explicitly says to use the current model for that role.
+
 ---
 
 ## The general pattern
