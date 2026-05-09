@@ -6,6 +6,34 @@ No API keys. No shared runtime. No orchestration code. Just markdown files.
 
 ---
 
+## Start Here
+
+If you are using a CLI agent or any agent with filesystem access, copy-paste this:
+
+```text
+Clone https://github.com/anshulLuhsna/council.md into the current workspace.
+
+Then read these files in this order:
+1. README.md
+2. templates/coordinator.md
+
+Then start a brand new council.md session for me.
+
+Important:
+- You are the coordinator.
+- Run the whole workflow for me using the repo files.
+- Ask me the setup questions one at a time.
+- Create the session folder and files yourself.
+- Treat the synthesizer as an agent too.
+- When synthesis is done, also fill `## Summary UI Data` in `synthesizer.md`.
+- If I want the UI briefing, generate `summary.html` for that session too.
+- Do not ask me to edit YAML or manage files manually unless you absolutely have to.
+```
+
+In simple words: tell your agent to clone the repo, read `README.md` and `templates/coordinator.md`, and start the session for you. The agent should ask the questions, create the files, run the council flow, run the synthesizer, and optionally generate `summary.html`.
+
+---
+
 ## Why
 
 You ask one AI a hard question. It answers confidently. You ask again from a different angle. It argues the opposite, just as confidently.
@@ -18,14 +46,15 @@ It works with Claude, ChatGPT, Gemini, local models, or any combination — incl
 
 ## Quickstart
 
-1. Open [`templates/coordinator.md`](templates/coordinator.md) in any AI that reads markdown — Claude Code, Cursor, ChatGPT, claude.ai, Gemini.
-2. Paste it in. Answer three questions, one at a time:
+1. If you have a CLI/file-access agent, use the **Start Here** prompt above.
+2. If you do not, open [`templates/coordinator.md`](templates/coordinator.md) in any AI that reads markdown — Claude Code, Cursor, ChatGPT, claude.ai, Gemini.
+3. Paste it in. Answer three questions, one at a time:
    - What's the decision?
    - What does a good outcome look like?
    - Anything we must not miss?
-3. Confirm the setup the coordinator proposes. The coordinator picks the profile, agents, and **default model picks** (see **Default model heuristics** in [`templates/coordinator.md`](templates/coordinator.md): Claude for technical roles, Perplexity for financial / cited facts, Grok for adversarial reviewer roles, ChatGPT for neutral / synthesizer) — type `go` or tweak.
-4. Follow the coordinator's instructions. It tells you which model to open in a new tab and exactly what to paste. You paste replies back.
-5. Answer one reflection question. State your decision. Done.
+4. Confirm the setup the coordinator proposes. The coordinator picks the profile, agents, and **default model picks** (see **Default model heuristics** in [`templates/coordinator.md`](templates/coordinator.md): Claude for technical roles, Perplexity for financial / cited facts, Grok for adversarial reviewer roles, ChatGPT for neutral / synthesizer) — type `go` or tweak.
+5. Follow the coordinator's instructions. It tells you which model to open in a new tab and exactly what to paste. You paste replies back.
+6. Answer one reflection question. State your decision. Done.
 
 The coordinator handles every file, every motion, every phase transition. You never run a CLI command, edit YAML, or write a motion table.
 
@@ -82,7 +111,7 @@ After `synthesizer.md` is complete, the coordinator may offer an optional `summa
 - open questions
 - a reflection prompt before the human decision
 
-The summary UI is generated from `synthesizer.md` and may use `discussion.md` only for quotes or attribution. A summarizer model can translate the synthesis into structured UI data, but it must not add new opinions, risks, options, or recommendations.
+The summary UI is generated from `synthesizer.md` and may use `discussion.md` only for quotes or attribution. The synthesizer may also include a structured `## Summary UI Data` payload in the same file so tooling can render `summary.html` automatically. That payload must not add new opinions, risks, options, or recommendations.
 
 `summary.html` is a presentation layer only. The source of truth remains `discussion.md`, `synthesizer.md`, and `votes.md`.
 

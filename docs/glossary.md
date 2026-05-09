@@ -171,6 +171,8 @@ It can include agent summary cards, agreements, conflicts, kill risks, candidate
 
 The summary UI is generated after synthesis. It reads from `synthesizer.md` as the primary source and may use `discussion.md` for short quotes or attribution. It does not read model chats directly.
 
+In the default workflow, the synthesizer may also include a structured `## Summary UI Data` JSON payload in `synthesizer.md` so tooling can render a session-local `summary.html`.
+
 ### Summarizer
 
 The **summarizer** is the model or human step that turns `synthesizer.md` into plain-language UI data for `summary.html`.

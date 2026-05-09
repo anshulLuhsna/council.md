@@ -31,6 +31,10 @@ Do **not** write synthesis into `discussion.md`.
 - Every Agreement / Conflict bullet must have an evidence anchor (quote or heading pointer)
 - Attribute positions to agents — no anonymous claims
 - Note LOW confidence where agents marked it
+- After the official synthesis, also produce **`## Summary UI Data`** as a JSON payload for the optional `summary.html`
+- The UI payload is a translation layer only: it may simplify, shorten, and structure; it must not add new reasoning
+- The UI payload may use `discussion.md` only for short quotes or attribution
+- The UI payload must preserve disagreement, uncertainty, and source-of-truth boundaries
 
 ---
 
@@ -93,6 +97,92 @@ Instruction: label each substantive disagreement. Positions with Evidence: per a
 `COMPLETE` | `PARTIAL` | `INCOMPLETE` — [one sentence why]
 
 <!-- If **INCOMPLETE**, say what is missing here (and optionally in Incomplete Council). Do not add a separate `## Synthesis Status` heading — SPEC-rules §8. -->
+
+---
+
+## Summary UI Data
+
+<!--
+Optional but recommended when you want a session-specific `summary.html`.
+Write exactly one fenced `json` block below. No prose outside the block.
+
+The JSON must translate the official synthesis above into renderable UI data.
+It must not invent new risks, new options, consensus, or a recommendation.
+
+Required top-level keys:
+- session
+- overview
+- agents
+- agreements
+- conflicts
+- openQuestions
+
+Optional top-level keys:
+- topKillRisks
+- candidatePaths
+-->
+
+```json
+{
+  "session": {
+    "title": "[TBD]",
+    "type": "[TBD]",
+    "synthesisConfidence": "[TBD]"
+  },
+  "overview": {
+    "primaryQuestion": "[TBD]",
+    "primaryTension": "[TBD]",
+    "nonRecommendationCopy": "[TBD]",
+    "executiveBrief": [
+      "[TBD]"
+    ]
+  },
+  "agents": [
+    {
+      "name": "[TBD]",
+      "lens": "[TBD]",
+      "plain": "[TBD]",
+      "warning": "[TBD]",
+      "changeOrTest": "[TBD]",
+      "confidence": "[TBD]",
+      "quote": "[TBD]"
+    }
+  ],
+  "agreements": [
+    {
+      "title": "[TBD]",
+      "summary": "[TBD]",
+      "agents": [
+        "[TBD]"
+      ],
+      "quote": "[TBD]"
+    }
+  ],
+  "conflicts": [
+    {
+      "title": "[TBD]",
+      "stakes": "[TBD]",
+      "sideA": {
+        "who": "[TBD]",
+        "position": "[TBD]",
+        "quote": "[TBD]"
+      },
+      "sideB": {
+        "who": "[TBD]",
+        "position": "[TBD]",
+        "quote": "[TBD]"
+      },
+      "resolver": "[TBD]"
+    }
+  ],
+  "openQuestions": [
+    {
+      "q": "[TBD]",
+      "why": "[TBD]"
+    }
+  ]
+}
+```
 
 ---
 

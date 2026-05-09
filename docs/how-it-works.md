@@ -96,7 +96,7 @@ This is a static, non-authoritative briefing page for humans who want a clearer 
 - candidate options
 - a reflection prompt
 
-The optional summary is generated from `synthesizer.md` and may consult `discussion.md` for short quotes or attribution. The summarizer's job is translation and presentation only:
+The optional summary is generated from `synthesizer.md` and may consult `discussion.md` for short quotes or attribution. The synthesizer can also provide a `## Summary UI Data` JSON payload in `synthesizer.md` so tooling can render the page directly. The summarizer's job is translation and presentation only:
 
 - simplify language
 - preserve disagreements

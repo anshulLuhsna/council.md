@@ -43,6 +43,7 @@ SYNTHESIZER OUTPUT FORMAT (under ## Council Synthesis in synthesizer.md)
   ### Open Questions   — gaps the human should resolve before deciding
   ### Candidate Options — 2–3 paths, attributed, no winner picked
   ### Synthesis Confidence — COMPLETE / PARTIAL / INCOMPLETE
+  ## Summary UI Data  — optional fenced JSON payload for summary.html rendering
 
 ANTI-SYCOPHANCY RULES (embed in every generated agent role file)
   - Blind round: write your contribution before reading others
@@ -311,7 +312,7 @@ Once confirmed:
 4. Write `discussion.md` with `### Agent: [Name]` stubs for each agent
 5. Write `drafts/[slug].md` for each agent (empty contribution template)
 6. Write `votes.md` with full frontmatter (use the schema from the protocol context above)
-7. Write `synthesizer.md` with the role instructions + empty `## Council Synthesis` + `## Human Decision` + `## Post-Decision Review` sections
+7. Write `synthesizer.md` with the role instructions + empty `## Council Synthesis` + `## Summary UI Data` + `## Human Decision` + `## Post-Decision Review` sections
 8. Tell the user the folder path and which agent is up first
 
 **In chat mode:**
@@ -447,6 +448,7 @@ You are a cartographer of the decision landscape.
 
 Your output goes under ## Council Synthesis in synthesizer.md.
 Do NOT write into discussion.md.
+If the file includes ## Summary UI Data, fill that too with one fenced JSON block.
 
 RULES
 - Every Agreement / Conflict bullet must include a quoted excerpt
@@ -455,6 +457,7 @@ RULES
 - Preserve sharp conflict. If agents strongly disagree, say so.
 - Attribute every position to the agent who holds it.
 - Note LOW confidence contributions; do not cite them as support.
+- Summary UI Data is a translation layer only: do not invent new risks, new options, consensus, or a recommendation.
 
 ─── CONTEXT ─────────────────────────────────────────────
 [paste full contents of context.md]
@@ -488,6 +491,13 @@ Write your synthesis using exactly this structure:
 
 ### Synthesis Confidence
 [COMPLETE / PARTIAL / INCOMPLETE — one sentence why]
+
+## Summary UI Data
+[
+one fenced json block only; plain-language UI payload derived from the synthesis,
+including session, overview, agents, agreements, conflicts, openQuestions, and
+optionally topKillRisks and candidatePaths
+]
 ```
 
 When the user pastes the synthesis back, verify:
