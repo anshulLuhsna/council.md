@@ -4,6 +4,8 @@ A file-first, invariant-first protocol for running AI councils on hard decisions
 
 You can run it with no API keys, no shared runtime, and no orchestration code. That is a feature: it works with the AI subscriptions and tools people already use.
 
+<img width="1448" height="1086" alt="ChatGPT Image May 10, 2026, 11_37_22 PM" src="https://github.com/user-attachments/assets/d38f86ff-6e9e-4f86-be33-6e3184a7db55" />
+
 ---
 
 ## Start Here
