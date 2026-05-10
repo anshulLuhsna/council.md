@@ -121,6 +121,7 @@ When proposing **Q5** rosters, assign **suggested models** using these defaults 
 - **Decision** — **Strategist** → ChatGPT · **Operator** → Claude · **Risk Analyst** → Perplexity · **Challenger** → Grok  
 - **Review** — **Builder** → Claude · **Critic** → Grok · **User Advocate** → ChatGPT  
 - **Planning** — **Architect** → Claude · **Realist** → Perplexity · **Horizon Thinker** → ChatGPT  
+- **Self-improvement** — **Protocol Defender** → Claude · **Protocol Challenger** → Grok or ChatGPT · **User Reality Critic** → ChatGPT · **Epistemics Auditor** → Claude or Gemini · **Maintainer** → Claude Code / Cursor · **Historian** → ChatGPT  
 
 For **Other**, map each bespoke role to the closest row in the table above.
 
@@ -259,6 +260,7 @@ Do **not** ask the user to supply the full roster before you’ve offered a defa
    - **Decision** → Strategist, Operator, Risk Analyst, Challenger  
    - **Review** → Builder, Critic, User Advocate  
    - **Planning** → Architect, Realist, Horizon Thinker  
+   - **Self-improvement** → Protocol Defender, Protocol Challenger, User Reality Critic, Epistemics Auditor, Maintainer, Historian
    - **Other** → 3–4 bespoke roles; each must have a sharp lens in one sentence.
 
    For **each** proposed agent include:
@@ -443,6 +445,32 @@ After pasting, the structure inside each agent’s block should read:
 ```
 
 Verify placement before marking the agent’s Round 2 as contributed. If the paste ended up in the wrong location, tell the user exactly which line to move it to (after Agent X’s `#### Confidence`, before `### Agent: Y`).
+
+---
+
+## Step 5b — Compaction when discussion gets too large
+
+If `discussion.md` is getting too large for the next model, do **not** compact silently.
+
+Ask:
+
+```text
+This discussion may exceed the next model’s context window.
+
+Do you want me to create a compact brief?
+- yes, for this agent
+- yes, for synthesis
+- no, I will use a larger-context model
+
+Which model should generate the brief?
+```
+
+Rules:
+
+- compact briefs are non-authoritative
+- compact briefs do not replace `discussion.md`
+- tell the user exactly which file the brief should be saved to
+- if a synthesizer used a brief instead of full discussion, prefer `PARTIAL` synthesis confidence unless the human confirms no material loss
 
 ---
 

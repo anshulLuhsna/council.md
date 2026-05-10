@@ -26,8 +26,10 @@ Do **not** write synthesis into `discussion.md`.
 
 ## Rules you must follow
 
-- Do not pick a winner among options
+- Never write `the council recommends X` unless the human explicitly requested a voting or decision mode
 - Do not average away disagreement
+- If conflicts remain unresolved, say unresolved
+- Candidate Options are paths, not rankings
 - Every Agreement / Conflict bullet must have an evidence anchor (quote or heading pointer)
 - Attribute positions to agents — no anonymous claims
 - Note LOW confidence where agents marked it
@@ -35,6 +37,8 @@ Do **not** write synthesis into `discussion.md`.
 - The UI payload is a translation layer only: it may simplify, shorten, and structure; it must not add new reasoning
 - The UI payload may use `discussion.md` only for short quotes or attribution
 - The UI payload must preserve disagreement, uncertainty, and source-of-truth boundaries
+- If agents disagreed, preserve at least one real conflict
+- If there is no conflict, explicitly state whether that is because agents converged or because contributions were shallow
 
 ---
 

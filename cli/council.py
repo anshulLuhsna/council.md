@@ -26,7 +26,7 @@ REPO_ROOT = SCRIPT_DIR.parent
 DEFAULT_DIR = Path("./council")
 
 VALID_STATUSES = {"open", "contributing", "synthesizing", "decided", "archived"}
-VALID_PROFILES = {"decision", "review", "planning"}
+VALID_PROFILES = {"decision", "review", "planning", "self-improvement"}
 PLACEHOLDER_MODELS = frozenset({"", "replace-me", '""', "''"})
 
 
@@ -828,7 +828,7 @@ def main():
 
     p_init = subparsers.add_parser("init", help="Scaffold a new council from a profile")
     p_init.add_argument("profile", nargs="?", default="decision",
-                        help="Profile: decision, review, planning")
+                        help="Profile: decision, review, planning, self-improvement")
     p_init.add_argument("dir", nargs="?", default=None,
                         help="Target directory (default: ./council)")
 

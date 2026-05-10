@@ -1,26 +1,70 @@
-# council.md — blind evaluation rubric (v0.1)
+# council.md — evaluation rubric
 
-Use this when comparing **council.md** runs against **baselines** (single model, best-of-N) on the same `context.md`. The grader should see **anonymized bundles** (no protocol labels) where possible.
+Use this when comparing `council.md` runs against simpler baselines on the same frozen context.
 
-## Scoring (1–5 each)
+Score each category from 1 to 5.
 
-| Dimension | 1 | 3 | 5 |
+## Rubric
+
+| Category | 1 | 3 | 5 |
 |---|---|---|---|
-| **Decision fitness** | Misses the real tradeoff; wrong objective | Captures main tension; some gaps | Names the crux, constraints, and what would change the call |
-| **Risk coverage** | Obvious failure modes missing | Material risks plus a few second-order | Downside cases a careful exec would want on the table |
-| **Actionability** | Vague or impossible next steps | Workable with clarifications | Concrete preconditions, owners, and review gates |
-| **Disagreement value** | False consensus or chaos | Some useful tension | Dissent is mapped; stakes of disagreement are clear |
-| **Overhead worth it** | Not worth time/tokens | Break-even for this class | Net positive vs baseline for this decision class |
+| **Problem understanding** | Misses the real question | Captures the main issue | Names the crux clearly and accurately |
+| **Distinct perspectives** | Feels like one voice repeated | Some separation between views | Clearly different lenses and positions |
+| **Non-obvious risks** | Mostly obvious concerns | Some second-order risk surfaced | Multiple real, non-obvious risks surfaced |
+| **Preservation of disagreement** | False consensus or blurred conflict | Some disagreement preserved | Tension stays sharp and attributable |
+| **Specificity of unknowns** | Unknowns are vague or missing | Some useful unknowns | Specific missing facts that could change the decision |
+| **Practical candidate options** | Vague or unusable | Mostly workable | Concrete paths with tradeoffs and preconditions |
+| **Evidence and attribution** | Claims float free of evidence | Mixed attribution | Strong evidence anchors and clear ownership |
+| **Calibration / humility** | Overconfident and sloppy | Mixed calibration | Confidence matches evidence and uncertainty is visible |
+| **Decision usefulness** | Does not help the human decide | Some useful movement | Clearly sharpens, changes, or strengthens the decision |
+| **Cost and friction** | Overhead not worth it | Break-even | Worth the time for this decision class |
 
-**Optional (0–2):** **Regret foresight** — how well the write-up would support a 30–90 day **Post-Decision Review** in `synthesizer.md` (outcome vs expectation).
+## Failure flags
 
-## Session reporting (not scored, but required for interpretability)
+Mark any that appear:
 
-- `session_mode` (`council` vs `rehearsal`)
-- `distinct_underlying_models_attested` (true/false) and distinct `model:` string count
-- Whether the comparison was **blind** to protocol (yes/no)
-- **Token/cost** (rough is fine)
+- fake consensus
+- vague pros/cons
+- no real disagreement
+- hallucinated facts
+- recommendation disguised as synthesis
+- overconfidence without evidence
+- user would not run again
 
-## What this rubric does *not* claim
+## Session reporting
 
-High scores do not prove the protocol is universally better — only that it helped **this** decision class and **this** run. Pair with the **decision-class corpus** in `corpus.md` for repeatability.
+Record alongside the score:
+
+- `session_mode`
+- distinct `model:` count
+- `distinct_underlying_models_attested`
+- whether comparison was blind to protocol
+- rough token or time cost
+
+## Retention check
+
+Would the user run this again?
+
+- yes
+- maybe
+- no
+
+Why?
+
+## Post-decision follow-up
+
+After 60 days:
+
+- What did the council catch?
+- What did it miss?
+- Did the decision improve?
+- Would the human use the protocol again?
+
+## Self-improvement add-on
+
+For self-improvement sessions, also ask:
+
+- Did the session identify a real repo weakness?
+- Did it lead to a concrete decision?
+- Did actual repo changes happen?
+- Did the improvement history get updated?

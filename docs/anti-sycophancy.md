@@ -96,6 +96,8 @@ The coordinator interview **rejects vague roles** and requires explicit **optimi
 
 **Why it works:** Prompt-only “don’t average” is weak; **evidence anchors** make mis-attribution easier to catch. A **second model** can audit synthesis against `discussion.md` (optional).
 
+**What to watch for:** synthesis collapse. That is when the headings remain but the conflict is softened into respectable prose, minority positions disappear, or the output quietly implies a recommendation without saying it directly.
+
 **What good synthesis looks like:**
 Not: "Agents generally support a hybrid approach with some caution about execution risk."
 But: "Strategist supports Option C on strategic grounds. Operator supports Option C but warns the founder cannot run sales + product simultaneously past 30 days. Risk Analyst accepts Option C only with pre-defined kill criteria. Challenger questions whether the team is building a business or a bridge round."

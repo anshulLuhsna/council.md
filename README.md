@@ -1,8 +1,8 @@
 # council.md
 
-A file-based protocol for running a council of AI models on hard decisions.
+A file-first, invariant-first protocol for running AI councils on hard decisions.
 
-No API keys. No shared runtime. No orchestration code. Just markdown files.
+You can run it with no API keys, no shared runtime, and no orchestration code. That is a feature: it works with the AI subscriptions and tools people already use.
 
 ---
 
@@ -48,6 +48,43 @@ It works with Claude, ChatGPT, Gemini, local models, or any combination — incl
 
 ---
 
+## Core Thesis
+
+`council.md` is:
+
+- **file-first** — session files are canonical
+- **invariant-first** — tooling is welcome only if it preserves the protocol boundaries
+- **runtime-optional** — you can run it with no runtime, but compatible tooling is allowed
+
+This project is not anti-runtime. It starts with files because deliberation benefits from visible boundaries:
+
+- who saw what
+- when each agent contributed
+- where disagreement emerged
+- how synthesis handled conflict
+
+If a tool or runtime preserves those invariants and emits the same auditable session files, it is compatible.
+
+---
+
+## Why Not A Runtime?
+
+Runtimes are useful for some workflows.
+
+`council.md` starts with files because the main problem here is not orchestration. It is independence, visibility, and disagreement quality.
+
+The project is not saying:
+
+> runtimes are impossible or always bad
+
+It is saying:
+
+> deliberation needs explicit boundaries, and any tooling must preserve them
+
+See [docs/runtime-conformance.md](docs/runtime-conformance.md) for the compatibility rules.
+
+---
+
 ## Quickstart
 
 1. If you have a CLI/file-access agent, use the **Start Here** prompt above.
@@ -80,6 +117,8 @@ A session is a folder of markdown files. Six core files, all human-readable:
 | `agents/[name].md` | One file per agent role |
 
 Optional: `drafts/[slug].md` for blind round, `discussion-r1.md`, `discussion-r2.md` for round rollover, and `summary.html` as a non-authoritative plain-language briefing after synthesis.
+
+The important rule is that files remain inspectable and portable even when tooling helps.
 
 ---
 
@@ -151,19 +190,29 @@ Starting points for common session shapes. The coordinator picks one for you bas
 | `profiles/decision/` | Strategist, Operator, Risk Analyst, Challenger |
 | `profiles/review/` | Builder, Critic, User Advocate |
 | `profiles/planning/` | Architect, Realist, Horizon Thinker |
+| `profiles/self-improvement/` | Protocol Defender, Protocol Challenger, User Reality Critic, Epistemics Auditor, Maintainer, Historian |
 
 See [`docs/customization.md`](docs/customization.md) for adding agents, renaming roles, and forking profiles.
 
 ---
 
+## Self-Improvement
+
+`council.md` can review itself.
+
+The [`profiles/self-improvement/`](profiles/self-improvement/) profile runs a council on proposed protocol, docs, CLI, example, or product-framing changes. Major outcomes from those sessions are recorded in [IMPROVEMENT_HISTORY.md](IMPROVEMENT_HISTORY.md).
+
+---
+
 ## Examples
 
-Two fully worked sessions are in the repo — read them to see what a complete council looks like.
+Three fully worked sessions are in the repo — read them to see what a complete council looks like.
 
 | Folder | What it shows |
 |---|---|
 | [`examples/startup-pivot/`](examples/startup-pivot/) | Decision council — B2C→B2B pivot with 7 months of runway. Real disagreement; synthesizer refuses to pick a winner. |
 | [`examples/technical-architecture/`](examples/technical-architecture/) | Review council — third-party API vs. fine-tuning. Security agent flags LOW confidence; unresolved conflict preserved. |
+| [`examples/council-self-review/`](examples/council-self-review/) | `council.md` reviews its own framing and improvement direction. Real disagreement on runtimes, files, and repeat-use friction. |
 
 ---
 
@@ -173,6 +222,7 @@ The CLI is a convenience layer for power users. It's not required — the coordi
 
 ```bash
 python3 cli/council.py init decision ./my-council     # scaffold from a profile
+python3 cli/council.py init self-improvement ./my-self-review
 python3 cli/council.py validate ./my-council          # check files against the spec
 python3 cli/council.py validate --strict ./my-council # CI mode — promotes warnings to errors
 python3 cli/council.py status ./my-council            # current phase and contributions
@@ -190,12 +240,15 @@ No network, no API calls. See [`cli/README.md`](cli/README.md).
 |---|---|
 | [`SPEC.md`](SPEC.md) | Spec index |
 | [`SPEC-core.md`](SPEC-core.md) | Compliance contract — what must not change |
-| [`SPEC-rules.md`](SPEC-rules.md) | Operational rules — workflows, YAML, synthesizer behavior, locks |
+| [`SPEC-rules.md`](SPEC-rules.md) | Operational rules — workflows, YAML, synthesizer behavior, locks, compatible tooling |
 | [`docs/how-it-works.md`](docs/how-it-works.md) | Phase flow and walkthrough |
 | [`docs/glossary.md`](docs/glossary.md) | Plain-language definitions for synthesis terms like agreement, conflict, kill risk, and candidate option |
 | [`docs/anti-sycophancy.md`](docs/anti-sycophancy.md) | How the protocol prevents false consensus |
 | [`docs/customization.md`](docs/customization.md) | Normative core vs. forks |
 | [`docs/invocation-guides.md`](docs/invocation-guides.md) | Model-specific setup (Claude, ChatGPT, Gemini, local) |
+| [`docs/subscription-native.md`](docs/subscription-native.md) | Why copy-paste and no API keys are a product feature |
+| [`docs/runtime-conformance.md`](docs/runtime-conformance.md) | What compatible tooling and runtimes must preserve |
+| [`docs/compaction.md`](docs/compaction.md) | How to handle long sessions without replacing source-of-truth files |
 | [`docs/eval.md`](docs/eval.md) | How to benchmark council vs. baselines |
 | [`docs/eval/rubric.md`](docs/eval/rubric.md) | Blind comparison scoring template |
 | [`research/prior-art.md`](research/prior-art.md) | Background research and prior art |

@@ -1,81 +1,166 @@
-# Evaluation: Is council.md Worth the Overhead?
+# Evaluation: Does council.md Actually Improve Decision Support?
 
-DeliberationBench-class studies show **multi-LLM coordination can underperform** simpler baselines when coordination adds cost without information gain. council.md is designed for **high-stakes decisions** where **independent perspectives** and **explicit disagreement mapping** matter—not every task.
+The useful question is not:
 
-This document describes **how to evaluate** whether the protocol helps *your* decision class.
+> Did the council sound sophisticated?
 
----
+It is:
 
-## What you are comparing
+> Did `council.md` produce better decision support than simpler AI workflows?
 
-| Baseline | Description |
-|---|---|
-| **Single model** | One strong model, one long prompt |
-| **Best-of-N** | Sample N completions from one or more models; human picks |
-| **council.md** | Role-separated contributions + synthesizer cartography in **`synthesizer.md`** |
-
-Success is **not** “did the council agree?” — it is **whether the human makes a better decision** (for some definition of better).
+This document keeps the eval practical.
 
 ---
 
-## Recommended outcome metrics (human-rated)
+## Baselines to compare
 
-1. **Decision quality** — correctness where verifiable; perceived robustness otherwise  
-2. **Risk coverage** — important downside scenarios surfaced  
-3. **Time to clarity** — calendar time + cognitive effort until the human can commit  
-4. **Post-decision regret** — optional follow-up (30–90 days): “Would we choose differently?”  
+Compare `council.md` against:
 
----
+1. **Single Model**
+   Ask one strong model for advice.
 
-## Procedure (minimal)
+2. **Single Model + Self-Critique**
+   Ask one model for an answer, then ask it to critique itself.
 
-1. **Choose a decision class** — e.g. pivot, architecture commitment, hiring exec  
-2. **Run council.md** on real examples (use **`drafts/`** blind workflow honestly)  
-3. **Run baseline(s)** — same `context.md`; single-model answer + optional best-of-N  
-4. **Blind or arms-length comparison** — preferred: a **second human** scores anonymized bundles without knowing which protocol produced them. If only “future-you” is available, **pre-register** the rubric (`docs/eval/rubric.md`) and **freeze** `context.md` before opening bundles to reduce hindsight bias.
-5. **Track tokens/cost** — council overhead vs baseline  
+3. **Best-of-N**
+   Ask 3 models separately and let the human compare.
 
----
+4. **council.md**
+   Run blind agents, optional Round 2, and synthesis.
 
-## Reproducible artifacts (addresses external critique)
-
-For debates like DeliberationBench (“voices hurt”), **procedure alone is weak**. Ship:
-
-| Artifact | Location |
-|---|---|
-| Rubric | [`docs/eval/rubric.md`](eval/rubric.md) |
-| Starter decision-class corpus | [`docs/eval/corpus.md`](eval/corpus.md) — five indexed scenarios plus expanded **context sketches** (still not full ground-truth bundles) |
-| One filled example bundle | [`docs/eval/example-eval-bundle.md`](eval/example-eval-bundle.md) |
+Success is not “did the council agree?” It is whether the human got better decision support.
 
 ---
 
-## Post-decision regret
+## Task types to use
 
-Record outcomes under **`## Post-Decision Review`** in **`synthesizer.md`** (see template). Without that section filled, the “30–90 day regret” metric has nowhere to live.
+Use real tasks when possible:
 
----
+- strategic product decision
+- technical architecture decision
+- project review
+- planning problem
+- postmortem or pre-mortem
 
-## Reporting results
-
-If you publish benchmarks, report: decision class, **session_mode (`council` vs `rehearsal`)**, **distinct `model:` count**, **`distinct_underlying_models_attested`**, blind vs not, human effort, and outcome metrics. That addresses “voices hurt” critiques by separating **protocol design** from **bad task fit** and **fake diversity from strings**.
-
----
-
-See **SPEC-rules §4.4–4.5** for **`session_mode`**, **`model:`**, and **`distinct_underlying_models_attested`**.
+Self-improvement sessions are also valid, but should be measured separately.
 
 ---
 
-## When council.md tends to win
+## Practical metrics
 
-- Genuine **tradeoffs** with no dominant objective  
-- **Stakeholder-shaped** perspectives map cleanly to roles  
-- **Disagreement is informative**, not noise  
-- **Anti-averaging** synthesis preserves conflicts you would otherwise smooth over mentally  
+Track:
+
+- number of distinct risks surfaced
+- number of non-obvious risks
+- number of real conflicts preserved
+- evidence quality
+- specificity of unknowns
+- usefulness of candidate options
+- whether synthesis avoided fake consensus
+- whether the human changed, clarified, or strengthened the decision
+- time cost
+- whether the user would run the protocol again
+- post-decision regret after 30 / 60 / 90 days
+
+## Failure flags
+
+Watch for:
+
+- fake consensus
+- vague pros/cons
+- no real disagreement
+- hallucinated facts
+- recommendation disguised as synthesis
+- overconfident claims without evidence
+- user says they would not run the protocol again
 
 ---
 
-## When council.md tends to lose
+## Minimal procedure
 
-- **Low uncertainty** — fact lookup or single-expert judgment suffices  
-- **Tight latency** — deliberation time dominates  
-- **Rehearsal mode only** — same model, same session; value drops toward styled self-debate (still can help structure, but do not expect diversity of distribution)  
+1. Pick a real decision class.
+2. Freeze the context.
+3. Run `council.md` honestly, including blind round.
+4. Run the baselines on the same context.
+5. Compare outputs with the rubric in [rubric.md](eval/rubric.md).
+6. Record time cost and repeat-use willingness.
+
+Preferred: blind the protocol labels before grading.
+
+If you cannot blind the grader, at least pre-register the scoring criteria before reading outputs.
+
+---
+
+## Would the user run this again?
+
+Record this explicitly:
+
+- yes
+- maybe
+- no
+
+Then answer:
+
+- Why?
+
+This matters because `council.md` can be valuable and still too heavy for repeated use.
+
+---
+
+## Post-decision review
+
+After 30 / 60 / 90 days, ask:
+
+- What did the council catch?
+- What did it miss?
+- Did the decision improve?
+- Would the human use the protocol again?
+
+Record this under `## Post-Decision Review` in `synthesizer.md` where possible.
+
+---
+
+## Self-improvement session eval
+
+For self-improvement sessions, also measure:
+
+- did the council identify a real repo weakness?
+- did the human make a concrete decision?
+- did repo changes happen?
+- did the change improve onboarding, correctness, or usefulness?
+- did later sessions reveal that the change helped?
+- was `IMPROVEMENT_HISTORY.md` updated?
+
+---
+
+## Planned validation checks
+
+Future `council validate` may warn if:
+
+- `## Council Synthesis` has no evidence quotes
+- `### Conflict Map` is empty while multiple agents contributed
+- synthesis includes phrases like:
+  - `the council recommends`
+  - `overall consensus`
+  - `best option`
+  - `clearly choose`
+- `## Summary UI Data` is missing required schema fields
+- `discussion.md` is very large and may need compaction
+- Round 2 was added as duplicate `### Agent: X — Round 2`
+- agents have identical or near-identical sections
+- all agents report HIGH confidence
+- no agent includes meaningful `Unknowns`
+
+This is planned validation, not yet a claim that the current CLI enforces all of it.
+
+---
+
+## Position
+
+`council.md` should be judged against realistic baselines, not against an imaginary standard where more agents automatically means better reasoning.
+
+That is the whole point of the eval discipline:
+
+- preserve honest disagreement
+- measure whether the extra process paid off
+- avoid turning the protocol into a ritual that only feels rigorous

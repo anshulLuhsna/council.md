@@ -12,7 +12,7 @@ The protocol is:
 
 - **Markdown-first** — every file is human-readable and editable  
 - **Provider-agnostic** — Claude, ChatGPT, Gemini, local models, or any mix  
-- **Runtime-free** — no API keys, no shared runtime, no orchestration code  
+- **File-first and runnable without a runtime** — no API keys, shared runtime, or orchestration code are required  
 - **Human-in-the-loop by design** — the human controls every phase transition  
 
 ---

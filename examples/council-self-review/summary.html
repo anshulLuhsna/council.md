@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- Optional briefing generated from synthesizer.md; not authoritative. -->
+<!--
+  Canonical standalone renderer template for council.md summary artifacts.
+  The CLI injects a session's `## Summary UI Data` JSON payload into the
+  <script type="application/json" id="council-summary">
+{
+  "session": {
+    "title": "council.md Self-Review",
+    "type": "Review",
+    "synthesisConfidence": "PARTIAL"
+  },
+  "overview": {
+    "primaryQuestion": "Should council.md reframe itself from runtime-free to file-first, invariant-first, runtime-optional?",
+    "primaryTension": "Protecting the protocol’s epistemic boundaries without turning the project into an anti-runtime ideology.",
+    "nonRecommendationCopy": "The council converges on a clearer framing, but not on the long-term role of runtime tooling.",
+    "executiveBrief": [
+      "The strongest agreement is that the current runtime-free language is too narrow for the project’s actual thesis.",
+      "Several agents argue that the real value lives in invariants: blind independence, canonical files, explicit phase control, and synthesis that maps disagreement instead of deciding.",
+      "The deepest unresolved question is whether file-first is the mechanism itself or simply the current best way to preserve those invariants while the project is still small and inspectable."
+    ]
+  },
+  "agents": [
+    {
+      "name": "Protocol Defender",
+      "lens": "Invariants",
+      "plain": "Reframe the project, but only around the actual invariants. Do not let softer runtime language weaken blind independence or canonical files.",
+      "warning": "A loose compatibility story could invite tools that claim conformance while quietly breaking the protocol.",
+      "changeOrTest": "Document exact invariants and runtime conformance rules.",
+      "confidence": "HIGH",
+      "quote": "‘No runtime’ is not itself the invariant."
+    },
+    {
+      "name": "Protocol Challenger",
+      "lens": "Strategic critique",
+      "plain": "The protocol may be right about fake consensus and still too manual to win as a product.",
+      "warning": "The project may be mistaking moral seriousness for product clarity.",
+      "changeOrTest": "Test whether a runtime that preserves invariants reduces friction meaningfully.",
+      "confidence": "HIGH",
+      "quote": "A lot of people will admire it, run it once, and never run it again."
+    },
+    {
+      "name": "User Reality Critic",
+      "lens": "Adoption and retention",
+      "plain": "The better story is not anti-runtime. It is that council.md works with the AI tools people already pay for.",
+      "warning": "If users will not run this twice, the protocol has a product problem no matter how principled it is.",
+      "changeOrTest": "Measure repeat-use willingness explicitly in evals.",
+      "confidence": "MEDIUM",
+      "quote": "Most users do not care about ‘runtime-free’ as a philosophical statement."
+    },
+    {
+      "name": "Epistemics Auditor",
+      "lens": "Reasoning quality",
+      "plain": "The reframe is right because it points attention at invariants, but the protocol still needs stronger anti-collapse synthesis and compaction discipline.",
+      "warning": "Elegant synthesis can still hide real disagreement.",
+      "changeOrTest": "Strengthen synthesizer rules and add compaction guidance.",
+      "confidence": "HIGH",
+      "quote": "The protocol’s strongest idea is not markdown. It is structured independence."
+    },
+    {
+      "name": "Maintainer",
+      "lens": "Repo changes",
+      "plain": "Turn the strategic change into concrete artifacts: new docs, a self-improvement profile, a canonical example, and stronger synthesis language.",
+      "warning": "Do not respond by building a runtime and muddying the thesis.",
+      "changeOrTest": "Ship the docs/profile/example change set first.",
+      "confidence": "HIGH",
+      "quote": "This should become a concrete repo change set, not just a messaging tweak."
+    },
+    {
+      "name": "Historian",
+      "lens": "Direction over time",
+      "plain": "This is mostly a clarification of what the project already believed, but it is important enough to record as a real directional change.",
+      "warning": "Without explicit history, future readers will misremember this move.",
+      "changeOrTest": "Add improvement history and record unresolved disagreements.",
+      "confidence": "HIGH",
+      "quote": "This is a clarification with strategic consequences, not a full reversal."
+    }
+  ],
+  "agreements": [
+    {
+      "title": "Runtime-free is too narrow as the main identity",
+      "summary": "The council broadly agrees that the repo’s deeper thesis is about invariants and inspectability, not just the absence of orchestration.",
+      "agents": [
+        "Protocol Defender",
+        "User Reality Critic",
+        "Epistemics Auditor",
+        "Maintainer",
+        "Historian"
+      ],
+      "quote": "The protocol’s strongest idea is not markdown. It is structured independence."
+    },
+    {
+      "title": "Concrete repo artifacts should carry the strategy",
+      "summary": "The project should not rely on a slogan change alone; it should add docs, examples, and improvement history that make the direction legible.",
+      "agents": [
+        "Maintainer",
+        "User Reality Critic",
+        "Historian"
+      ],
+      "quote": "This should become a concrete repo change set, not just a messaging tweak."
+    }
+  ],
+  "conflicts": [
+    {
+      "title": "Are files the mechanism or the current best artifact surface?",
+      "stakes": "This affects whether file-first stays central to the product identity or becomes a more modest implementation choice.",
+      "sideA": {
+        "who": "Protocol Defender / Historian",
+        "position": "Files are part of the mechanism because they keep state inspectable and auditable.",
+        "quote": "The current protocol has a real idea inside it: deliberation quality depends on visible separation."
+      },
+      "sideB": {
+        "who": "Protocol Challenger",
+        "position": "Files may be over-romanticized; the deeper value may live elsewhere in the protocol.",
+        "quote": "The project should be careful not to mythologize markdown itself."
+      },
+      "resolver": "Evidence from compatible tooling or users that preserves the invariants while changing the artifact surface."
+    },
+    {
+      "title": "Should runtime compatibility stay conceptual or eventually become concrete?",
+      "stakes": "This determines whether the project remains purely protocol-first or edges toward a reference runtime later.",
+      "sideA": {
+        "who": "Protocol Challenger / User Reality Critic",
+        "position": "A disciplined runtime might reduce friction enough to be better for many users.",
+        "quote": "If a runtime preserved those invariants and reduced friction, it might simply be better."
+      },
+      "sideB": {
+        "who": "Protocol Defender / Maintainer",
+        "position": "Clarify compatibility, but do not rush into runtime work and muddy the thesis.",
+        "quote": "I would also not implement a runtime or automatic compaction here."
+      },
+      "resolver": "Evidence that thin tooling is insufficient and that a runtime can preserve the invariants in practice."
+    }
+  ],
+  "topKillRisks": [
+    {
+      "rank": 1,
+      "title": "The project becomes more elegant in language but not more usable",
+      "verdict": "fatal",
+      "why": "If the repo reframes itself beautifully but users still will not run the protocol twice, the project remains strategically weak.",
+      "quote": "A lot of people will admire it, run it once, and never run it again."
+    },
+    {
+      "rank": 2,
+      "title": "Runtime compatibility language weakens the actual invariants",
+      "verdict": "unknown",
+      "why": "If the repo invites tooling without a hard conformance model, future implementations may preserve the vocabulary while breaking the protocol.",
+      "quote": "A softer framing may invite tools that keep the surface language but violate the actual protocol."
+    },
+    {
+      "rank": 3,
+      "title": "Synthesis collapse keeps hiding real disagreement",
+      "verdict": "manageable",
+      "why": "The project already has the right instinct, but it needs stronger safeguards so synthesis does not turn tension into respectable mush.",
+      "quote": "Elegant synthesis can still hide real disagreement."
+    }
+  ],
+  "candidatePaths": [
+    {
+      "name": "Clarify Without Expanding",
+      "summary": "Reframe the repo as file-first, invariant-first, runtime-optional and add docs, self-improvement profile, and stronger synthesis rules without building a runtime.",
+      "pros": [
+        "Preserves the protocol thesis",
+        "Makes the project easier to understand",
+        "Avoids premature infra work"
+      ],
+      "cons": [
+        "Does not directly solve workflow friction",
+        "Leaves runtime questions unresolved"
+      ],
+      "preconditions": [
+        "Stronger docs",
+        "Improvement history",
+        "Concrete self-review example"
+      ],
+      "leansFrom": [
+        "Protocol Defender",
+        "Epistemics Auditor",
+        "Maintainer",
+        "Historian"
+      ]
+    },
+    {
+      "name": "Clarify and Explore Runtime Compatibility More Aggressively",
+      "summary": "Use the reframe to begin exploring what a conformant runtime might look like without committing to building one now.",
+      "pros": [
+        "Addresses friction pressure sooner",
+        "Tests whether invariants survive under tooling"
+      ],
+      "cons": [
+        "Risks muddying the project thesis",
+        "Can distract from protocol clarity"
+      ],
+      "preconditions": [
+        "Clear conformance checklist",
+        "Real evidence of repeat-use friction"
+      ],
+      "leansFrom": [
+        "Protocol Challenger",
+        "User Reality Critic"
+      ]
+    }
+  ],
+  "openQuestions": [
+    {
+      "q": "Will real users run this twice if nothing changes except the framing?",
+      "why": "This is the core adoption question behind the entire strategic review."
+    },
+    {
+      "q": "Can a compatible runtime reduce friction without weakening blind independence and human phase control?",
+      "why": "This determines whether runtime-optional remains conceptual or becomes a future implementation direction."
+    }
+  ]
+}
+  </script>
+
+  <!-- Rendering Engine -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const dataStr = document.getElementById("council-summary").textContent;
+      let data;
+      try {
+        data = JSON.parse(dataStr);
+      } catch(e) {
+        document.querySelector('.content-wrapper').innerHTML = "<h1 style='color:red;'>Initialization Error: Invalid summary UI JSON payload</h1>";
+        return;
+      }
+
+      const steps = [
+        { id: 'overview', title: 'Overview' },
+        { id: 'agents', title: 'Agents' },
+        { id: 'agreements', title: 'Agreements' },
+        { id: 'conflicts', title: 'Conflicts' },
+        { id: 'risks', title: 'Top Kill Risks' },
+        { id: 'paths', title: 'Candidate Paths' },
+        { id: 'open-questions', title: 'Open Questions' },
+        { id: 'decide', title: 'Before you decide' }
+      ];
+
+      let currentStepIndex = 0;
+
+      // Initialize Session
+      document.getElementById('header-session-title').textContent = data.session.title;
+      
+      const navList = document.getElementById('nav-list');
+      const contentSections = document.getElementById('content-sections');
+
+      // Generate HTML for each section
+      const renderHelpers = {
+        overview: () => `
+          <div class="step-label">Stage 1 of 8</div>
+          <h2 class="step-title" style="display:none;">Overview</h2>
+          <h1 style="font-size:3.5rem; font-family:var(--font-serif); font-weight:400; line-height:1; margin-bottom:24px; color:#111; letter-spacing:-0.04em;">${data.overview.primaryQuestion}</h1>
+          
+          <div style="background:#F1F1E8; border-left:4px solid #111; padding:16px; margin-bottom:32px;">
+            <span class="lbl" style="color:#000; margin-bottom:8px;">Primary Tension & Conflict</span>
+            <span style="font-weight:400; font-size:1.1rem; font-family:var(--font-sans); color:#333; font-style:italic;">${data.overview.primaryTension}</span>
+          </div>
+          
+          <p style="font-size:1.2rem; color:var(--text-muted); font-weight:300; margin-bottom:32px; padding-bottom: 24px; border-bottom: 1px solid var(--border);">
+            ${data.overview.nonRecommendationCopy}
+          </p>
+          
+          <div style="font-size:1.15rem; line-height:1.7; color:#222;">
+            ${data.overview.executiveBrief.map(p => `<p style="margin-bottom:20px;">${p}</p>`).join('')}
+          </div>
+        `,
+        agents: () => `
+          <div class="step-label">Stage 2 of 8</div>
+          <h2 class="step-title">Council Lens & Perspectives</h2>
+          <div class="agent-grid">
+            ${data.agents.map(a => `
+              <div class="briefing-card">
+                <div class="card-header">
+                  <div>
+                    <h3 class="agent-name">${a.name}</h3>
+                    <div class="agent-lens">${a.lens}</div>
+                  </div>
+                  <div>
+                    <span class="confidence-badge badge-${a.confidence.toLowerCase()}">${a.confidence} CONFIDENCE</span>
+                  </div>
+                </div>
+                
+                <div class="plain-text">"${a.plain}"</div>
+                
+                ${a.warning ? `<div class="strong-warning">${a.warning}</div>` : ''}
+                
+                <div style="margin-top:24px; padding-top:20px; border-top:1px solid var(--border);">
+                  <span class="lbl">What they'd change or test</span>
+                  <div style="font-size:1.05rem;">${a.changeOrTest}</div>
+                </div>
+                
+                ${a.quote ? `<div class="serif-quote">${a.quote}</div>` : ''}
+              </div>
+            `).join('')}
+          </div>
+        `,
+        agreements: () => `
+          <div class="step-label">Stage 3 of 8</div>
+          <h2 class="step-title">Points of Agreement</h2>
+          <div class="agent-grid">
+            ${(data.agreements.length ? data.agreements.map(a => `
+              <div class="briefing-card">
+                <h3 style="font-family:var(--font-serif); font-size:1.2rem; margin-bottom:12px; color:#111; font-weight:400;">${a.title}</h3>
+                <div style="color:var(--text-muted); margin-bottom:16px; font-size:0.65rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em;">
+                  AGREED BY: ${a.agents.join(', ')}
+                </div>
+                <p style="font-size:0.95rem; line-height:1.5; margin-bottom:20px; color:#333; font-weight:300;">${a.summary}</p>
+                ${a.quote ? `<div class="serif-quote" style="font-size:0.85rem;">${a.quote}</div>` : ''}
+              </div>
+            `).join('') : `<div class="briefing-card"><p style="font-size:0.95rem; color:#555;">No explicit agreement summary was provided for this session.</p></div>`)}
+          </div>
+        `,
+        conflicts: () => `
+          <div class="step-label">Stage 4 of 8</div>
+          <h2 class="step-title">Critical Conflicts</h2>
+          <div>
+            ${(data.conflicts.length ? data.conflicts.map(c => `
+              <div class="conflict-card">
+                <h3 class="conflict-title">${c.title}</h3>
+                
+                <div class="stakes">
+                  <span class="lbl" style="color:var(--color-fatal); margin-bottom:4px;">The Stakes</span>
+                  ${c.stakes}
+                </div>
+                
+                <div class="versus-grid">
+                  <div class="side-panel">
+                    <div class="lbl">Side A: ${c.sideA.who}</div>
+                    <p style="font-weight:600; font-size:1.1rem; margin-bottom:16px; color:#111;">${c.sideA.position}</p>
+                    <div class="serif-quote" style="font-size:1.05rem; border-color:#ccc; margin:0;">${c.sideA.quote}</div>
+                  </div>
+                  
+                  <div class="side-panel">
+                    <div class="lbl">Side B: ${c.sideB.who}</div>
+                    <p style="font-weight:600; font-size:1.1rem; margin-bottom:16px; color:#111;">${c.sideB.position}</p>
+                    <div class="serif-quote" style="font-size:1.05rem; border-color:#ccc; margin:0;">${c.sideB.quote}</div>
+                  </div>
+                </div>
+                
+                <div class="resolver-box">
+                  <strong style="display:block; margin-bottom:6px; color:#1E3A8A;">Evidence that would flip this:</strong> 
+                  ${c.resolver}
+                </div>
+              </div>
+            `).join('') : `<div class="briefing-card"><p style="font-size:0.95rem; color:#555;">No explicit conflict summary was provided for this session.</p></div>`)}
+          </div>
+        `,
+        risks: () => `
+          <div class="step-label">Stage 5 of 8</div>
+          <h2 class="step-title" style="margin-bottom:8px;">Top Kill Risks</h2>
+          <p style="margin-bottom:32px; font-size:1rem; color:var(--text-muted); font-weight:300;">The primary mechanisms by which this decision fails catastrophically.</p>
+          <div>
+            ${(data.topKillRisks.length ? data.topKillRisks.map(r => `
+              <div class="risk-item ${r.rank === 1 ? 'risk-item-1' : ''}">
+                <div class="risk-rank ${r.rank === 1 ? 'risk-rank-1' : ''}">#${r.rank}</div>
+                <div class="risk-content">
+                  <div class="risk-header">
+                    <div class="risk-title">${r.title}</div>
+                    <div class="verdict ${r.verdict.toLowerCase()}">${r.verdict}</div>
+                  </div>
+                  <p style="margin-bottom:16px; font-size:1.05rem; color:#444;">${r.why}</p>
+                  <div class="serif-quote" style="font-size:1.05rem; margin:0;">"${r.quote}"</div>
+                </div>
+              </div>
+            `).join('') : `<div class="briefing-card"><p style="font-size:0.95rem; color:#555;">This session did not include a top-kill-risks section.</p></div>`)}
+          </div>
+        `,
+        paths: () => `
+          <div class="step-label">Stage 6 of 8</div>
+          <h2 class="step-title">Candidate Paths <span style="font-weight:400; font-size:1.1rem; color:var(--text-muted); font-family:var(--font-sans); display:block; margin-top:8px;">Council leans (not crowned winners)</span></h2>
+          <div>
+            ${(data.candidatePaths.length ? data.candidatePaths.map(p => `
+              <div class="path-card">
+                <div class="path-header">
+                  <h3 class="path-title">${p.name}</h3>
+                </div>
+                <div style="margin-bottom:20px;">
+                  ${p.leansFrom.map(lean => `<span class="lean-chip">Leaned path: ${lean}</span>`).join('')}
+                </div>
+                <p class="path-summary">${p.summary}</p>
+                <div class="pros-cons">
+                  <div>
+                    <strong style="color:#1E8E3E; text-transform:uppercase; font-size:0.8rem; letter-spacing:0.05em;">Favorable Elements</strong>
+                    <ul>${p.pros.map(pr => `<li>${pr}</li>`).join('')}</ul>
+                  </div>
+                  <div>
+                    <strong style="color:#D93025; text-transform:uppercase; font-size:0.8rem; letter-spacing:0.05em;">Adverse Elements</strong>
+                    <ul>${p.cons.map(co => `<li>${co}</li>`).join('')}</ul>
+                  </div>
+                </div>
+                <div style="background:#F9F9F8; padding:16px; border-radius:6px; font-size:0.95rem; border:1px solid #E5E5E0; margin-top:16px;">
+                  <strong style="color:#444;">Required Preconditions:</strong> ${p.preconditions.join(', ')}
+                </div>
+              </div>
+            `).join('') : `<div class="briefing-card"><p style="font-size:0.95rem; color:#555;">No candidate paths were included in the summary payload.</p></div>`)}
+          </div>
+        `,
+        'open-questions': () => `
+          <div class="step-label">Stage 7 of 8</div>
+          <h2 class="step-title">Open Questions</h2>
+          <p style="margin-bottom:32px; font-size:1.1rem; color:var(--text-muted);">Human resolution or discovery required prior to final decision.</p>
+          <ul class="oq-list">
+            ${(data.openQuestions.length ? data.openQuestions.map(q => `
+              <li class="oq-item">
+                <div class="oq-q">${q.q}</div>
+                <div class="oq-why"><strong style="color:#333;">Why this matters:</strong> ${q.why}</div>
+              </li>
+            `).join('') : `<li class="oq-item"><div class="oq-q">No open questions recorded</div><div class="oq-why">The summary payload did not include unresolved questions for this session.</div></li>`)}
+          </ul>
+        `,
+        decide: () => `
+          <div class="step-label">Stage 8 of 8</div>
+          <h2 class="step-title">Before You Decide</h2>
+          <div class="decide-box">
+            <h3 style="margin-bottom:12px; font-family:var(--font-serif); font-size:1.8rem; color:#111;">Capture Human Deliberation</h3>
+            <p style="color:#666; font-size:1.05rem;">
+              <strong>Important:</strong> The formal decision MUST be recorded under <code>## Human Decision</code> in <code>synthesizer.md</code>.
+              This UI does not persist data.
+            </p>
+            <textarea id="reflection-notes" placeholder="Draft your rationale, conditional approvals, or follow-up mandates here..."></textarea>
+            <div>
+              <button class="primary-btn" onclick="copyNotes()">Copy Notes to Clipboard</button>
+            </div>
+            <div id="copy-status" style="margin-top:12px; color:#1E8E3E; font-weight:600; opacity:0; transition:opacity 0.3s;">Copied! Please paste into synthesizer.md</div>
+          </div>
+        `
+      };
+
+      // Helper for copy
+      window.copyNotes = function() {
+        const text = document.getElementById('reflection-notes').value;
+        navigator.clipboard.writeText(text).then(() => {
+          const status = document.getElementById('copy-status');
+          status.style.opacity = '1';
+          setTimeout(() => { status.style.opacity = '0'; }, 3000);
+        });
+      };
+
+      // Build DOM map
+      steps.forEach((step, idx) => {
+        // Nav button
+        const btn = document.createElement('button');
+        btn.className = 'nav-btn';
+        btn.innerHTML = `<span class="step-num">0${idx+1}</span> <span>${step.title}</span>`;
+        btn.onclick = () => goToStep(idx);
+        
+        const li = document.createElement('li');
+        li.appendChild(btn);
+        navList.appendChild(li);
+
+        // Section article
+        const sec = document.createElement('article');
+        sec.id = `step-${idx}`;
+        sec.className = 'step-content';
+        sec.innerHTML = renderHelpers[step.id] ? renderHelpers[step.id]() : `<h2>${step.title}</h2><p>Content goes here.</p>`;
+        contentSections.appendChild(sec);
+      });
+
+      const navBtns = document.querySelectorAll('.nav-btn');
+      const sections = document.querySelectorAll('.step-content');
+      
+      function goToStep(idx) {
+        if(idx < 0 || idx >= steps.length) return;
+        currentStepIndex = idx;
+        
+        // Update active states
+        navBtns.forEach((b, i) => {
+            b.classList.toggle('active', i === idx);
+            if(i === idx) b.setAttribute('aria-current', 'step');
+            else b.removeAttribute('aria-current');
+        });
+        
+        sections.forEach((s, i) => s.classList.toggle('active', i === idx));
+        
+        // Update controls
+        document.getElementById('nav-step-indicator').textContent = `Step ${idx + 1} of ${steps.length}`;
+        document.getElementById('bottom-step-indicator').textContent = `Step ${idx + 1} of ${steps.length}`;
+        document.getElementById('prev-btn').disabled = idx === 0;
+        document.getElementById('next-btn').disabled = idx === steps.length - 1;
+        
+        // Scroll main area to top
+        document.querySelector('.content-wrapper').scrollTo(0, 0);
+      }
+
+      // Initialize defaults
+      goToStep(0);
+
+      // Event Listeners
+      document.getElementById('prev-btn').addEventListener('click', () => goToStep(currentStepIndex - 1));
+      document.getElementById('next-btn').addEventListener('click', () => goToStep(currentStepIndex + 1));
+
+      // Global keyboard navigation
+      window.addEventListener('keydown', (e) => {
+        // Do not intercept if user is typing in textarea
+        if(e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') return;
+        
+        if(e.key === 'ArrowRight') {
+            e.preventDefault();
+            goToStep(currentStepIndex + 1);
+        }
+        if(e.key === 'ArrowLeft') {
+            e.preventDefault();
+            goToStep(currentStepIndex - 1);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

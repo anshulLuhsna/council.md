@@ -38,7 +38,7 @@ Usage: council <command> [options]
 
 Commands:
   init [profile] [dir]   Scaffold a new council from a profile (default: decision)
-                         Profiles: decision, review, planning
+                         Profiles: decision, review, planning, self-improvement
                          dir: target directory (default: ./council)
   status [dir]           Show current phase, contributions, and vote status
   next [dir]             Print what to do next in the session
@@ -68,7 +68,7 @@ cmd_init() {
   local profile_dir="$REPO_ROOT/profiles/$profile"
 
   if [[ ! -d "$profile_dir" ]]; then
-    err "Profile '$profile' not found. Available profiles: decision, review, planning"
+    err "Profile '$profile' not found. Available profiles: decision, review, planning, self-improvement"
     exit 1
   fi
 

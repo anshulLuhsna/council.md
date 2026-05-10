@@ -172,6 +172,15 @@ If `discussion.md` approaches the synthesizer’s context limit:
 2. Continue Round 2 in fresh **`discussion.md`** with a header pointing to `discussion-r1.md` for prior text.
 3. Synthesizer reads **all** round files the human points to.
 
+## 6c. Compaction aids
+
+If the human chooses to create a compact brief for a later round or for synthesis, the brief is **non-authoritative**.
+
+- Briefs may help a model fit within context limits.
+- Briefs must not replace `discussion.md`, `context.md`, `votes.md`, or `synthesizer.md` as the archival record.
+- Briefs should preserve agent names, disagreements, confidence levels, and unresolved questions.
+- If synthesis relies on a brief instead of full discussion, prefer **`PARTIAL`** synthesis confidence unless the human confirms no material loss.
+
 ---
 
 ## 7. Voting format (`votes.md`)
@@ -236,6 +245,17 @@ The synthesizer reads `context.md`, **`discussion.md` (and `discussion-r*.md` if
 - Pick a single winning option as “the answer”
 - Average away disagreement
 - Hide dissent
+- Write `the council recommends X` unless the human explicitly asked for a decision mode
+
+### Synthesis collapse checks
+
+Before finalizing, the synthesizer should check:
+
+- Did I preserve minority positions?
+- Did I turn disagreement into vague consensus?
+- Did I imply a recommendation?
+- Did I attribute every substantive claim?
+- Did I include evidence quotes?
 
 ### Optional quality layer
 
@@ -272,6 +292,21 @@ The coordinator:
 ## 11. Customization vs compliance *(interpret SPEC-core §2)*
 
 You may rename agents freely and add agents. You **cannot** claim council.md v0.2 compliance if you move synthesis into `discussion.md` or duplicate phase state outside `votes.md` frontmatter.
+
+## 11b. Compatible tooling
+
+Tools may scaffold, validate, summarize, compact, or render sessions.
+
+Tools must not:
+
+- hide phase state outside `votes.md`
+- silently expose blind drafts
+- replace `discussion.md` as source of truth
+- synthesize into `discussion.md`
+- make the human decision
+- make compact briefs authoritative
+
+Runtime compatibility belongs in docs and operational guidance, not the compliance core, unless the canonical session files themselves change.
 
 ---
 

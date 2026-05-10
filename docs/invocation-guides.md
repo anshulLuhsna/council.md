@@ -6,6 +6,8 @@ The protocol is the same regardless of which model or interface you use. What ch
 
 Important: the coordinator is a coordinator, not the whole council. By default it should not silently impersonate the other agents or the synthesizer. It should hand off each turn to the user’s chosen web or CLI model unless the human explicitly says to use the current model for that role.
 
+This subscription-native workflow is deliberate. `council.md` is designed to work with the AI tools people already pay for, not only programmable APIs. See [subscription-native.md](subscription-native.md).
+
 ---
 
 ## The general pattern
@@ -86,6 +88,8 @@ If `discussion.md` is very long (many agents, multiple rounds), it may approach 
 1. **Upload as a file** instead of pasting — most interfaces handle uploaded files better than pasted text.
 2. **Use `discussion-r1.md` rollover** (see SPEC-rules §6b) — freeze the old discussion, start fresh.
 3. **For the synthesizer only:** tell the model which round file to treat as canonical; it reads both.
+
+If `discussion.md` is too large, use a compact brief only with explicit human consent. Briefs are non-authoritative. See [compaction.md](compaction.md).
 
 ---
 

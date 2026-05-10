@@ -1,6 +1,6 @@
 # council.md CLI
 
-Lightweight helper for council.md sessions. No API keys, no network, no LLM calls.
+Lightweight helper for council.md sessions. No API keys required. No network or LLM calls from the CLI itself.
 
 The CLI scaffolds councils, tracks session state, and validates files. It never touches an AI model — that part is always you.
 
@@ -57,9 +57,10 @@ Scaffold a new council from a profile template.
 council init decision ./my-decision
 council init review ./api-review
 council init planning ./q3-plan
+council init self-improvement ./protocol-review
 ```
 
-Profiles: `decision`, `review`, `planning`
+Profiles: `decision`, `review`, `planning`, `self-improvement`
 
 If no directory is specified, creates `./council`.
 
@@ -135,6 +136,16 @@ The **`council.sh`** implementation delegates `validate`, `status`, `next`, and 
 
 Returns a non-zero exit code on errors (useful in CI or pre-session checks).
 
+Planned future warnings include:
+
+- `## Council Synthesis` has no evidence quotes
+- `### Conflict Map` is empty while multiple agents contributed
+- synthesis includes phrases like `the council recommends`, `overall consensus`, or `best option`
+- `## Summary UI Data` is missing required schema fields
+- `discussion.md` is large enough that compaction may help
+- all agents report HIGH confidence
+- no agent includes meaningful `Unknowns`
+
 ### `council summary [dir]`
 
 Generate an optional session-local `summary.html` from the structured UI payload inside `synthesizer.md`.
@@ -155,6 +166,30 @@ Behavior:
 If the UI data section is missing or malformed, the command fails clearly without affecting protocol compliance.
 
 `summary.html` is optional and non-authoritative. The source of truth remains `discussion.md`, `synthesizer.md`, and `votes.md`.
+
+### Planned: `council compact`
+
+Compaction support is planned as a thin helper, not a hidden model runner.
+
+Possible shape:
+
+```bash
+council compact ./session --for round2 --agent epistemics-auditor --print-prompt
+council compact ./session --for synthesis --print-prompt
+```
+
+Planned behavior:
+
+- prints the exact prompt bundle to paste into a chosen model
+- suggests the target brief file path
+- may scaffold an empty non-authoritative brief template
+- may validate that a generated brief contains the required sections
+
+It should not:
+
+- call a model directly
+- silently compact a session
+- replace `discussion.md` as source of truth
 
 ---
 
@@ -193,6 +228,7 @@ Everything the CLI does can be done manually:
 - `next` = read `votes.md` status and decide what to do
 - `validate` / `validate --strict` = structural checks
 - `summary` = translate `## Summary UI Data` into a standalone `summary.html`
+- `compact` (planned) = generate a prompt bundle or empty brief template for long sessions
 - `remind` = grep **`Scheduled review date:`** in `synthesizer.md`
 
 If you are on a system without bash or Python, you do not need the CLI. Just work with the files directly.
