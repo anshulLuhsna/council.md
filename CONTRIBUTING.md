@@ -6,6 +6,54 @@ This document covers how to contribute, what tier of change you're proposing, an
 
 ---
 
+## Council-approved contributions
+
+This repo uses its own protocol to review meaningful changes.
+
+If you want to change `council.md`, the default path is:
+
+1. Form the idea or proposed change.
+2. Run a council on that change, usually with the `self-improvement` profile.
+3. Preserve the session files.
+4. Open a PR only if the proposal survives the council review.
+
+The goal is not ceremony for its own sake. The goal is to make major changes auditable, stress-tested, and visibly shaped by structured disagreement before they land.
+
+### When council approval is expected
+
+Council approval is expected for:
+- protocol changes
+- spec or rules changes
+- template rewrites
+- coordinator or synthesizer behavior changes
+- anti-sycophancy changes
+- validator behavior changes
+- new profiles
+- major docs reframing
+- new examples intended to set project direction
+
+You usually do **not** need a full council session for:
+- typo fixes
+- broken links
+- small wording clarifications
+- narrow bug fixes that do not change protocol behavior
+- small internal refactors with no user-facing effect
+
+When in doubt, run the council anyway. For this repo, that is a feature, not overhead.
+
+### What “survives the council” means
+
+A proposal is ready for a PR when the council has produced:
+- a clear question under review
+- real disagreement or explicit convergence
+- a synthesis that preserves conflicts and unknowns
+- a human decision on whether to proceed
+- concrete acceptability conditions for merging the change
+
+The council does not merge code. The council makes the change legible enough for a maintainer to judge whether the PR should exist at all.
+
+---
+
 ## What you can contribute
 
 **Easy to land:**
@@ -33,6 +81,27 @@ Protocol changes require a version bump (currently v0.2 → v0.3) and a migratio
 ---
 
 ## Before you open a PR
+
+0. **Run a council review for meaningful changes.**
+
+   For repo-shaping changes, create a session with `profiles/self-improvement/` or an equivalent compatible council.
+
+   Your PR should link or include:
+   - the council session path
+   - the question reviewed
+   - the human decision
+   - disagreements preserved
+   - the acceptability conditions the change had to satisfy
+
+   A good short PR note looks like:
+
+   ```text
+   Council review: examples/council-self-review/
+   Question: Should council.md reframe itself from runtime-free to file-first, invariant-first, runtime-optional?
+   Decision: Proceed with reframing; preserve canonical files and human-controlled phase gates.
+   Disagreements preserved: Whether a reference runtime should exist later; whether file-first is an epistemic mechanism or primarily a portability choice.
+   Acceptability conditions: No change to normative core file layout; no wording that implies runtimes are bad; no wording that makes the council the decision-maker.
+   ```
 
 1. **Run the validator on the affected examples and profiles:**
 
@@ -62,6 +131,12 @@ Protocol changes require a version bump (currently v0.2 → v0.3) and a migratio
    - `examples/startup-pivot/`, `examples/technical-architecture/`
 
    The CLI does not auto-sync these.
+
+5. **If your PR depends on council approval, make the PR easy to audit.**
+   - State the session path near the top of the PR.
+   - State whether the change fully satisfies the council's acceptability conditions.
+   - Call out any unresolved disagreement that still remains after implementation.
+   - If the implementation intentionally departs from the council outcome, say so plainly.
 
 ---
 
