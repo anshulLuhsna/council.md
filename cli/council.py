@@ -501,11 +501,12 @@ def cmd_next(args):
         info("Deliberation closed. Run the synthesizer.")
         print("  Fill ## Council Synthesis in synthesizer.md only (not discussion.md).")
         print("  Inputs: context.md + discussion.md + votes.md + synthesizer.md")
-        print("  Optional: also fill ## Summary UI Data so you can generate summary.html.")
+        print("  If you want the optional UI, have the model fill ## Summary UI Data only.")
+        print("  Do not ask the model to generate HTML; use `council summary` for that.")
 
     elif status == "decided":
         ok("Decision recorded.")
-        print("  Optional: run `council summary` to generate summary.html from synthesizer.md.")
+        print("  If you want the optional UI, run `council summary` to generate summary.html.")
         print("  Then archive when you are done.")
 
     elif status == "archived":

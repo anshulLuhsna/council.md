@@ -19,7 +19,7 @@ For every agent turn:
 3. Ask the agent to fill in their section.
 4. Merge into `discussion.md` (or paste under the correct `### Agent:` stub).
 
-For the **synthesizer**: paste `context.md` + full `discussion.md` (+ round splits if any) + `votes.md` + `synthesizer.md`, and instruct it to fill **`## Council Synthesis`** **inside `synthesizer.md` only** — never put synthesis in `discussion.md`. If you want the optional UI, have it also fill `## Summary UI Data` in the same file.
+For the **synthesizer**: paste `context.md` + full `discussion.md` (+ round splits if any) + `votes.md` + `synthesizer.md`, and instruct it to fill **`## Council Synthesis`** **inside `synthesizer.md` only** — never put synthesis in `discussion.md`. If you want the optional UI, have it also fill `## Summary UI Data` in the same file. Do not ask it to generate HTML; use `council summary` for that.
 
 ---
 
@@ -67,7 +67,7 @@ Most web interfaces (ChatGPT, Claude, Gemini) allow **up to 5 file attachments**
 4–5 files. All synthesis output goes **inside `synthesizer.md`**, not back into discussion.
 
 **Instruction to add:**
-> "You are the council synthesizer. Fill in `## Council Synthesis` in the synthesizer.md file above. Do not put any synthesis in discussion.md. If the template includes `## Summary UI Data`, fill that too so the session can generate `summary.html`."
+> "You are the council synthesizer. Fill in `## Council Synthesis` in the synthesizer.md file above. Do not put any synthesis in discussion.md. If the template includes `## Summary UI Data`, fill that too so the session can generate `summary.html`. Do not generate HTML yourself."
 
 ---
 

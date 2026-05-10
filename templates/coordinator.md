@@ -506,6 +506,7 @@ RULES
 - Attribute every position to the agent who holds it.
 - Note LOW confidence contributions; do not cite them as support.
 - Summary UI Data is a translation layer only: do not invent new risks, new options, consensus, or a recommendation.
+- Do not generate `summary.html` in the model. Fill only `## Summary UI Data`; the CLI renders the HTML from the canonical template.
 
 ─── CONTEXT ─────────────────────────────────────────────
 [paste full contents of context.md]
@@ -554,6 +555,17 @@ When the user pastes the synthesis back, verify:
 - No winner is picked in Candidate Options
 
 If any check fails, tell the user specifically what's missing and ask them to re-run the synthesizer.
+
+After the synthesis passes those checks, ask:
+
+> "Do you want the optional summary UI too?"
+
+If yes:
+- run `council summary [session-dir]` if you have CLI/file access
+- otherwise tell the user exactly to run `council summary [session-dir]`
+- do not ask any model to generate HTML
+- treat `## Summary UI Data` as the only model-authored UI input
+- remind the user that `summary.html` is non-authoritative and derived
 
 Save the synthesis under `## Council Synthesis` in `synthesizer.md`. Set `status: synthesizing` → `decided` ready.
 

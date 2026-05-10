@@ -37,6 +37,7 @@ Do **not** write synthesis into `discussion.md`.
 - The UI payload is a translation layer only: it may simplify, shorten, and structure; it must not add new reasoning
 - The UI payload may use `discussion.md` only for short quotes or attribution
 - The UI payload must preserve disagreement, uncertainty, and source-of-truth boundaries
+- Do not generate HTML, rewrite the UI template, or create `summary.html` yourself; only fill `## Summary UI Data`
 - If agents disagreed, preserve at least one real conflict
 - If there is no conflict, explicitly state whether that is because agents converged or because contributions were shallow
 
@@ -123,6 +124,7 @@ Write exactly one fenced `json` block below. No prose outside the block.
 The JSON must translate the official synthesis above into renderable UI data.
 It must not invent new risks, new options, consensus, or a recommendation.
 It must not soften or remove real conflict.
+It exists only so the CLI can generate `summary.html` from the canonical template.
 
 Required top-level keys:
 - session
@@ -204,6 +206,7 @@ Optional top-level keys:
 ## Human Decision
 
 <!-- Human writes here after reading ## Council Synthesis. -->
+<!-- After you finish writing this file, ask whether the user wants the optional summary UI. If yes, tell them to run `council summary [session-dir]` or ask the coordinator to run it. Do not generate HTML yourself. -->
 
 **Decision:**
 

@@ -30,6 +30,7 @@ Write only in this file, under `## Council Synthesis`.
 - If agents disagreed, preserve at least one real conflict
 - If there is no conflict, say whether that is because agents truly converged or because contributions were shallow
 - `## Summary UI Data` must not soften or remove conflict
+- Do not generate HTML, rewrite the UI template, or create `summary.html` yourself; only fill `## Summary UI Data`
 
 ### Synthesis Collapse Check
 
@@ -77,6 +78,8 @@ Before finalizing, check:
 
 ## Summary UI Data
 
+<!-- This JSON exists only so the CLI can generate `summary.html` from the canonical template. -->
+
 ```json
 {
   "session": {
@@ -102,6 +105,8 @@ Before finalizing, check:
 ---
 
 ## Human Decision
+
+<!-- After you finish writing this file, ask whether the user wants the optional summary UI. If yes, tell them to run `council summary [session-dir]` or ask the coordinator to run it. Do not generate HTML yourself. -->
 
 **Decision:**
 
