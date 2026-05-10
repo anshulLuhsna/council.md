@@ -2,7 +2,7 @@
 
 This file records the concrete repo changes implied by the self-review session.
 
-## Planned changes
+## Implemented changes
 
 - Reframe README language from runtime-free as identity to file-first, invariant-first, runtime-optional
 - Add `docs/subscription-native.md`

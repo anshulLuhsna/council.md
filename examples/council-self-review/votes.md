@@ -5,7 +5,7 @@ session_mode: council
 blind_round_closed: true
 distinct_underlying_models_attested: true
 lock:
-  holder: human
+  holder: ""
   acquired_at: ""
   ttl_hours: 24
 registered_agents:
