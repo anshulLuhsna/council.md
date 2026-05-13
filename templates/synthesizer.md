@@ -197,6 +197,25 @@ Optional top-level keys:
       "q": "[TBD]",
       "why": "[TBD]"
     }
+  ],
+  "topKillRisks": [
+    {
+      "rank": 1,
+      "title": "[TBD]",
+      "verdict": "fatal | manageable | unknown",
+      "why": "[TBD]",
+      "quote": "[TBD]"
+    }
+  ],
+  "candidatePaths": [
+    {
+      "name": "[TBD]",
+      "summary": "[TBD]",
+      "pros": ["[TBD]"],
+      "cons": ["[TBD]"],
+      "preconditions": ["[TBD]"],
+      "leansFrom": ["[TBD]"]
+    }
   ]
 }
 ```

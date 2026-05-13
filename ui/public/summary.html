@@ -4,7 +4,7 @@
 <!--
   Canonical standalone renderer template for council.md summary artifacts.
   The CLI injects a session's `## Summary UI Data` JSON payload into the
-  <script type="application/json" id="council-summary"> block below and writes
+  JSON script block below and writes
   the result as a session-local `summary.html`.
   Source of truth remains `synthesizer.md` + session markdown.
 -->
@@ -382,7 +382,7 @@
                     <div class="agent-lens">${a.lens}</div>
                   </div>
                   <div>
-                    <span class="confidence-badge badge-${a.confidence.toLowerCase()}">${a.confidence} CONFIDENCE</span>
+                    <span class="confidence-badge badge-${String(a.confidence || 'unknown').toLowerCase().split(/\s+/)[0]}">${a.confidence || 'UNKNOWN'} CONFIDENCE</span>
                   </div>
                 </div>
                 
@@ -456,26 +456,43 @@
           <h2 class="step-title" style="margin-bottom:8px;">Top Kill Risks</h2>
           <p style="margin-bottom:32px; font-size:1rem; color:var(--text-muted); font-weight:300;">The primary mechanisms by which this decision fails catastrophically.</p>
           <div>
-            ${(data.topKillRisks.length ? data.topKillRisks.map(r => `
+            ${(data.topKillRisks.length ? data.topKillRisks.map((rawRisk, idx) => {
+              const r = {
+                rank: rawRisk.rank || idx + 1,
+                title: rawRisk.title || `Risk ${idx + 1}`,
+                verdict: rawRisk.verdict || 'unknown',
+                why: rawRisk.why || rawRisk.summary || rawRisk.description || '',
+                quote: rawRisk.quote || ''
+              };
+              return `
               <div class="risk-item ${r.rank === 1 ? 'risk-item-1' : ''}">
                 <div class="risk-rank ${r.rank === 1 ? 'risk-rank-1' : ''}">#${r.rank}</div>
                 <div class="risk-content">
                   <div class="risk-header">
                     <div class="risk-title">${r.title}</div>
-                    <div class="verdict ${r.verdict.toLowerCase()}">${r.verdict}</div>
+                    <div class="verdict ${String(r.verdict).toLowerCase()}">${r.verdict}</div>
                   </div>
                   <p style="margin-bottom:16px; font-size:1.05rem; color:#444;">${r.why}</p>
-                  <div class="serif-quote" style="font-size:1.05rem; margin:0;">"${r.quote}"</div>
+                  ${r.quote ? `<div class="serif-quote" style="font-size:1.05rem; margin:0;">"${r.quote}"</div>` : ''}
                 </div>
               </div>
-            `).join('') : `<div class="briefing-card"><p style="font-size:0.95rem; color:#555;">This session did not include a top-kill-risks section.</p></div>`)}
+            `}).join('') : `<div class="briefing-card"><p style="font-size:0.95rem; color:#555;">This session did not include a top-kill-risks section.</p></div>`)}
           </div>
         `,
         paths: () => `
           <div class="step-label">Stage 6 of 8</div>
           <h2 class="step-title">Candidate Paths <span style="font-weight:400; font-size:1.1rem; color:var(--text-muted); font-family:var(--font-sans); display:block; margin-top:8px;">Council leans (not crowned winners)</span></h2>
           <div>
-            ${(data.candidatePaths.length ? data.candidatePaths.map(p => `
+            ${(data.candidatePaths.length ? data.candidatePaths.map((rawPath, idx) => {
+              const p = {
+                name: rawPath.name || rawPath.title || `Candidate path ${idx + 1}`,
+                summary: rawPath.summary || rawPath.description || '',
+                pros: Array.isArray(rawPath.pros) ? rawPath.pros : [],
+                cons: Array.isArray(rawPath.cons) ? rawPath.cons : [],
+                preconditions: Array.isArray(rawPath.preconditions) ? rawPath.preconditions : [],
+                leansFrom: Array.isArray(rawPath.leansFrom) ? rawPath.leansFrom : []
+              };
+              return `
               <div class="path-card">
                 <div class="path-header">
                   <h3 class="path-title">${p.name}</h3>
@@ -495,10 +512,10 @@
                   </div>
                 </div>
                 <div style="background:#F9F9F8; padding:16px; border-radius:6px; font-size:0.95rem; border:1px solid #E5E5E0; margin-top:16px;">
-                  <strong style="color:#444;">Required Preconditions:</strong> ${p.preconditions.join(', ')}
+                  <strong style="color:#444;">Required Preconditions:</strong> ${p.preconditions.length ? p.preconditions.join(', ') : 'None specified'}
                 </div>
               </div>
-            `).join('') : `<div class="briefing-card"><p style="font-size:0.95rem; color:#555;">No candidate paths were included in the summary payload.</p></div>`)}
+            `}).join('') : `<div class="briefing-card"><p style="font-size:0.95rem; color:#555;">No candidate paths were included in the summary payload.</p></div>`)}
           </div>
         `,
         'open-questions': () => `
@@ -558,7 +575,12 @@
         const sec = document.createElement('article');
         sec.id = `step-${idx}`;
         sec.className = 'step-content';
-        sec.innerHTML = renderHelpers[step.id] ? renderHelpers[step.id]() : `<h2>${step.title}</h2><p>Content goes here.</p>`;
+        try {
+          sec.innerHTML = renderHelpers[step.id] ? renderHelpers[step.id]() : `<h2>${step.title}</h2><p>Content goes here.</p>`;
+        } catch (e) {
+          console.error(`Failed to render summary section: ${step.id}`, e);
+          sec.innerHTML = `<h2>${step.title}</h2><p style="color:red;">This section could not render. Check the Summary UI Data payload shape in synthesizer.md.</p>`;
+        }
         contentSections.appendChild(sec);
       });
 

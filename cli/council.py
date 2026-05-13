@@ -320,12 +320,125 @@ def validate_summary_payload(data: dict) -> list[str]:
     return errs
 
 
+def list_of_strings(value) -> list[str]:
+    if not isinstance(value, list):
+        return []
+    return [str(item) for item in value if str(item).strip()]
+
+
+def dict_or_empty(value) -> dict:
+    return value if isinstance(value, dict) else {}
+
+
 def normalize_summary_payload(data: dict) -> dict:
     out = dict(data)
+    out["agents"] = [
+        {
+            "name": str(agent.get("name") or f"Agent {idx}"),
+            "lens": str(agent.get("lens") or ""),
+            "plain": str(agent.get("plain") or agent.get("position") or ""),
+            "warning": str(agent.get("warning") or ""),
+            "changeOrTest": str(agent.get("changeOrTest") or agent.get("test") or ""),
+            "confidence": str(agent.get("confidence") or "unknown"),
+            "quote": str(agent.get("quote") or ""),
+        }
+        for idx, agent in enumerate(out.get("agents") or [], start=1)
+        if isinstance(agent, dict)
+    ]
+    out["agreements"] = [
+        {
+            "title": str(item.get("title") or f"Agreement {idx}"),
+            "summary": str(item.get("summary") or item.get("plain") or ""),
+            "agents": list_of_strings(item.get("agents")),
+            "quote": str(item.get("quote") or ""),
+        }
+        if isinstance(item, dict)
+        else {"title": f"Agreement {idx}", "summary": str(item), "agents": [], "quote": ""}
+        for idx, item in enumerate(out.get("agreements") or [], start=1)
+    ]
+    out["conflicts"] = [
+        {
+            "title": str(item.get("title") or f"Conflict {idx}"),
+            "stakes": str(item.get("stakes") or item.get("summary") or ""),
+            "sideA": {
+                "who": str(dict_or_empty(item.get("sideA")).get("who") or "Side A"),
+                "position": str(dict_or_empty(item.get("sideA")).get("position") or ""),
+                "quote": str(dict_or_empty(item.get("sideA")).get("quote") or ""),
+            },
+            "sideB": {
+                "who": str(dict_or_empty(item.get("sideB")).get("who") or "Side B"),
+                "position": str(dict_or_empty(item.get("sideB")).get("position") or ""),
+                "quote": str(dict_or_empty(item.get("sideB")).get("quote") or ""),
+            },
+            "resolver": str(item.get("resolver") or ""),
+        }
+        if isinstance(item, dict)
+        else {
+            "title": f"Conflict {idx}",
+            "stakes": str(item),
+            "sideA": {"who": "Side A", "position": "", "quote": ""},
+            "sideB": {"who": "Side B", "position": "", "quote": ""},
+            "resolver": "",
+        }
+        for idx, item in enumerate(out.get("conflicts") or [], start=1)
+    ]
+    out["openQuestions"] = [
+        {"q": str(item.get("q") or item.get("question") or f"Open question {idx}"), "why": str(item.get("why") or "")}
+        if isinstance(item, dict)
+        else {"q": str(item), "why": ""}
+        for idx, item in enumerate(out.get("openQuestions") or [], start=1)
+    ]
     if "candidatePaths" not in out and "candidateOptions" in out:
         out["candidatePaths"] = out["candidateOptions"]
-    out.setdefault("topKillRisks", [])
-    out.setdefault("candidatePaths", [])
+    normalized_risks = []
+    for idx, risk in enumerate(out.get("topKillRisks") or [], start=1):
+        if isinstance(risk, str):
+            normalized_risks.append({
+                "rank": idx,
+                "title": risk,
+                "verdict": "unknown",
+                "why": risk,
+                "quote": "",
+            })
+            continue
+        if not isinstance(risk, dict):
+            continue
+        verdict = str(risk.get("verdict") or "unknown").strip().lower()
+        if verdict not in ("fatal", "manageable", "unknown"):
+            verdict = "unknown"
+        why = risk.get("why") or risk.get("summary") or risk.get("description") or risk.get("title") or ""
+        normalized_risks.append({
+            "rank": risk.get("rank") if isinstance(risk.get("rank"), int) else idx,
+            "title": str(risk.get("title") or f"Risk {idx}"),
+            "verdict": verdict,
+            "why": str(why),
+            "quote": str(risk.get("quote") or ""),
+        })
+    out["topKillRisks"] = normalized_risks
+
+    normalized_paths = []
+    for idx, path in enumerate(out.get("candidatePaths") or [], start=1):
+        if isinstance(path, str):
+            normalized_paths.append({
+                "name": path,
+                "summary": path,
+                "pros": [],
+                "cons": [],
+                "preconditions": [],
+                "leansFrom": [],
+            })
+            continue
+        if not isinstance(path, dict):
+            continue
+        normalized_paths.append({
+            "name": str(path.get("name") or path.get("title") or f"Candidate path {idx}"),
+            "summary": str(path.get("summary") or path.get("description") or ""),
+            "pros": list_of_strings(path.get("pros")),
+            "cons": list_of_strings(path.get("cons")),
+            "preconditions": list_of_strings(path.get("preconditions")),
+            "leansFrom": list_of_strings(path.get("leansFrom") or path.get("agents")),
+        })
+    out["candidatePaths"] = normalized_paths
     return out
 
 
@@ -333,11 +446,11 @@ def render_summary_html(template_text: str, payload: dict) -> str:
     json_text = json.dumps(payload, indent=2, ensure_ascii=False)
     replacement = f'<script type="application/json" id="council-summary">\n{json_text}\n  </script>'
     rendered = re.sub(
-        r'<script type="application/json" id="council-summary">.*?</script>',
+        r'^[ \t]*<script type="application/json" id="council-summary">.*?^[ \t]*</script>',
         replacement,
         template_text,
         count=1,
-        flags=re.DOTALL,
+        flags=re.DOTALL | re.MULTILINE,
     )
     if rendered == template_text:
         raise ValueError("Template missing council-summary JSON block")
@@ -596,6 +709,7 @@ def cmd_summary(args):
         sys.exit(1)
 
     assert payload is not None
+    payload = normalize_summary_payload(payload)
     validation_errors = validate_summary_payload(payload)
     if validation_errors:
         err("Summary UI data is incomplete:")
@@ -603,7 +717,6 @@ def cmd_summary(args):
             err(f"  {msg}")
         sys.exit(1)
 
-    payload = normalize_summary_payload(payload)
     html = render_summary_html(template_path.read_text(), payload)
     out_path = council_dir / "summary.html"
     out_path.write_text(html)

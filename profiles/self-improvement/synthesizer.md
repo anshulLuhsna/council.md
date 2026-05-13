@@ -98,7 +98,9 @@ Before finalizing, check:
   "agents": [],
   "agreements": [],
   "conflicts": [],
-  "openQuestions": []
+  "openQuestions": [],
+  "topKillRisks": [],
+  "candidatePaths": []
 }
 ```
 

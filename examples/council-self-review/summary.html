@@ -4,7 +4,264 @@
 <!--
   Canonical standalone renderer template for council.md summary artifacts.
   The CLI injects a session's `## Summary UI Data` JSON payload into the
-  <script type="application/json" id="council-summary">
+  JSON script block below and writes
+  the result as a session-local `summary.html`.
+  Source of truth remains `synthesizer.md` + session markdown.
+-->
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Council Summary Briefing</title>
+  <style>
+    /* CSS Variables */
+    :root {
+      --bg: #FCFCF9;
+      --surface: #FFFFFF;
+      --text: #1A1A1A;
+      --text-muted: #888888;
+      --border: #EAEAEA;
+      /* Typography */
+      --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+      --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      /* Semantic colors for risks */
+      --color-fatal: #DC2626;
+      --color-manageable: #D97706;
+      --color-unknown: #52525B;
+      --color-accent: #000000;
+      --nav-width: 240px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-sans); color: var(--text); background: var(--bg);
+      line-height: 1.6; display: flex; flex-direction: column; height: 100vh;
+      overflow: hidden;
+    }
+    
+    /* Header */
+    .app-header {
+      background: #FFFFFF; border-bottom: 1px solid var(--border); padding: 16px 32px;
+      display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;
+    }
+    .header-left { display: flex; align-items: center; gap: 16px; }
+    .badge { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; color: #777; background: #F3F3F3; padding: 4px 8px; }
+    .header-title { font-family: var(--font-serif); font-size: 1.25rem; font-style: italic; font-weight: 500; margin: 0; color: #111; letter-spacing: 0;}
+    .header-right { font-family: var(--font-mono); font-size: 0.7rem; color: #888; letter-spacing: -0.02em; }
+    .header-right span { text-decoration: underline; color: #111;}
+
+    /* Truth Strip footer */
+    .truth-strip-footer {
+      background: #FFFFFF; border-top: 1px solid var(--border); padding: 8px 32px;
+      display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;
+    }
+    .truth-strip-footer p {
+      font-size: 0.6rem; color: #999; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; margin: 0;
+    }
+    .truth-strip-footer code { font-family: var(--font-mono); color: #111; font-weight: 400; text-transform: none; }
+
+    /* Layout */
+    .app-container { display: flex; flex: 1; overflow: hidden; }
+
+    /* Sidebar / Nav */
+    .sidebar {
+      width: var(--nav-width); background: #F9F9F7; border-right: 1px solid var(--border);
+      display: flex; flex-direction: column; overflow-y: auto; z-index: 10;
+    }
+    .sidebar-title { display: none; }
+    .nav-list { list-style: none; display: flex; flex-direction: column; gap: 4px; padding: 24px; flex: 1;}
+    .sidebar-footer { padding: 24px; border-top: 1px solid var(--border); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: #999; font-weight: 700;}
+    .nav-btn {
+      width: 100%; text-align: left; padding: 8px 12px; border: 1px solid transparent; background: transparent;
+      border-radius: 4px; cursor: pointer; color: var(--text-muted); font-size: 0.875rem;
+      transition: all 0.15s ease; font-weight: 400; font-family: var(--font-sans); display: flex; gap: 12px; align-items: center;
+    }
+    .nav-btn:focus-visible { outline: 2px solid var(--color-accent); outline-offset: -2px; }
+    .nav-btn:hover:not(.active) { color: #111; }
+    .nav-btn.active { background: #FFFFFF; color: #111; font-weight: 600; border-color: var(--border); box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+
+    /* Main Area */
+    .main-area {
+      flex: 1; display: flex; flex-direction: column; position: relative; overflow: hidden;
+      scroll-behavior: smooth; min-width: 0;
+    }
+    .content-wrapper {
+      max-width: 860px; margin: 0 auto; padding: 48px 32px 72px; width: 100%;
+      flex: 1; overflow-y: auto;
+    }
+
+    /* Step transitions */
+    .step-content {
+      opacity: 0; transform: translateY(10px); display: none; animation: fadeUp 0.25s forwards ease-out;
+    }
+    .step-content.active { display: block; }
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Typography Defaults */
+    h1, h2, h3 { font-family: var(--font-serif); color: var(--text); }
+    .step-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--text-muted); font-weight: 700; margin-bottom: 16px;}
+    .step-title { font-size: 3rem; font-weight: 400; margin-bottom: 32px; color: #111; letter-spacing: -0.04em; line-height: 1.1; }
+    .serif-quote { font-family: var(--font-serif); font-style: italic; font-size: 0.85rem; color: var(--text-muted); margin: 16px 0; }
+    button:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px;}
+
+    /* Component: Cards */
+    .agent-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .briefing-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 0; padding: 20px;
+    }
+    .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+    .agent-name { font-family: var(--font-sans); font-size: 0.75rem; font-weight: 700; margin:0; text-transform: uppercase;}
+    .agent-lens { display: none; }
+    .confidence-badge {
+      font-size: 0.55rem; font-weight: 700; padding: 4px 8px; border-radius: 99px; border: none; letter-spacing: 0.05em;
+    }
+    .badge-high { background: #dcfce7; color: #166534; }
+    .badge-medium { background: #fef9c3; color: #854d0e; }
+    .badge-low { background: #f1f5f9; color: #475569; }
+
+    .strong-warning { color: #222; font-weight: 400; margin-top: 4px; font-size: 0.7rem; display:block; }
+    
+    .lbl { font-size: 0.65rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; letter-spacing: 0.05em; margin-bottom: 4px; display: block; }
+    .plain-text { font-size: 0.75rem; font-family: var(--font-serif); color: #555; font-style: italic; line-height: 1.5; font-weight: 400;}
+
+    /* Conflicts */
+    .conflict-card { margin-bottom: 48px; border-top: 1px solid var(--border); padding-top: 24px;}
+    .conflict-title { font-family:var(--font-serif); font-size: 1.5rem; margin-bottom: 16px; font-weight: 400;}
+    .stakes { font-weight: 400; color: #222; margin-bottom: 32px; font-size:1.1rem; border-left: 4px solid var(--color-fatal); padding-left: 16px; background: #fff1f2; padding: 16px;}
+    .versus-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+    .side-panel { background: var(--surface); border: 1px solid var(--border); padding: 24px; border-radius: 0; }
+    .resolver-box { background: var(--surface); border: 1px dashed var(--border); padding: 16px 20px; margin-top: 32px; font-size: 0.85rem; color: #111;}
+
+    /* Risks */
+    .risk-item { border: 1px solid var(--border); border-radius: 0; margin-bottom: 20px; background: var(--surface); display: flex; overflow: hidden; padding: 16px;}
+    .risk-rank { display: none; }
+    .risk-content { flex: 1; display:flex; flex-direction:column; justify-content:center;}
+    .risk-header { display: flex; justify-content: space-between; align-items: flex-start; flex-direction: column; margin-bottom: 12px; gap: 8px;}
+    .risk-title { font-size: 0.85rem; font-weight: 400; line-height: 1.4;}
+    .verdict { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; padding: 0; letter-spacing: 0.05em; color: #111;}
+    .verdict.fatal { color: var(--color-fatal); }
+    .verdict.manageable { color: var(--color-manageable); }
+    .verdict.unknown { color: var(--color-unknown); }
+    
+    .risk-rank-1 { display: none; }
+    .risk-item-1 { border-color: var(--border); box-shadow: none;}
+    
+    /* Candidate Paths */
+    .path-card { border: 1px solid var(--border); padding: 32px; border-radius: 0; background: var(--surface); margin-bottom: 24px;}
+    .path-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;}
+    .path-title { font-family: var(--font-serif); font-size: 1.5rem; font-weight: 400; margin: 0;}
+    .lean-chip { display: inline-flex; align-items: center; background: transparent; color: var(--text-muted); font-size: 0.65rem; padding: 0; border-radius: 0; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;}
+    .path-summary { font-size: 1rem; color: #444; margin-bottom: 24px; line-height: 1.5; }
+    .pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; font-size: 0.85rem;}
+    .pros-cons ul { padding-left: 20px; color: #333; margin-top: 8px;}
+    .pros-cons li { margin-bottom: 6px; }
+
+    /* Open Questions */
+    .oq-list { list-style: none; counter-reset: oq-counter; margin-top: 24px;}
+    .oq-item { position: relative; padding-left: 48px; margin-bottom: 40px; }
+    .oq-item::before {
+      counter-increment: oq-counter; content: "0" counter(oq-counter);
+      position: absolute; left: 0; top: 0; width: 32px; height: 32px;
+      color: #111; font-family: var(--font-mono); font-size: 0.7rem;
+      display: flex; align-items: flex-start; justify-content: flex-start;
+    }
+    .oq-q { font-family: var(--font-serif); font-size: 1.25rem; font-weight: 400; margin-bottom: 8px; color: #111;}
+    .oq-why { color: var(--text-muted); font-size: 0.85rem; }
+
+    /* Decide */
+    .decide-box { background: var(--surface); border: 1px solid var(--border); padding: 40px; text-align: left; }
+    .decide-box textarea { width: 100%; height: 240px; margin: 24px 0; padding: 20px; border: 1px solid var(--border); background: #f9f9f7; font-family: var(--font-sans); font-size: 0.95rem; resize: vertical; }
+    .decide-box textarea:focus { outline: 1px solid #111; outline-offset: -1px; }
+    .primary-btn { background: #000; color: #fff; border: none; padding: 12px 32px; font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: background 0.2s; font-family: var(--font-sans); text-transform: uppercase; letter-spacing: 0.1em;}
+    .primary-btn:hover { background: #333; }
+
+    /* Bottom Nav */
+    .bottom-controls {
+      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+      border-top: 1px solid var(--border); padding: 16px 32px; background: #FFFFFF;
+      flex-shrink: 0;
+    }
+    .bottom-controls-inner {
+      max-width: 860px; width: 100%; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    }
+    .bottom-actions { display: flex; align-items: center; gap: 12px; }
+    .ctrl-btn { padding: 12px 32px; background: transparent; border: 1px solid var(--border); cursor: pointer; font-weight: 700; font-family: var(--font-sans); transition: all 0.2s; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.75rem; color: var(--text-muted);}
+    .ctrl-btn:hover:not(:disabled) { background: #FFFFFF; color: #111; }
+    #next-btn { background: #000; color: #fff; border-color: #000; margin-left: 16px;}
+    #next-btn:hover:not(:disabled) { background: #333; color: #fff; border-color: #333;}
+    .ctrl-btn:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px;}
+    .ctrl-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    
+    @media(max-width: 768px) {
+      .app-container { flex-direction: column; }
+      .sidebar { width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--border); padding: 20px 16px; flex-shrink: 0; }
+      .sidebar-title { margin-bottom: 16px; }
+      .nav-list { display: flex; flex-direction: row; overflow-x: auto; gap: 8px; padding-bottom: 8px; -webkit-overflow-scrolling: touch;}
+      .nav-btn { white-space: nowrap; width: auto; }
+      .content-wrapper { padding: 32px 20px 48px; }
+      .versus-grid { grid-template-columns: 1fr; }
+      .pros-cons { grid-template-columns: 1fr; }
+      .bottom-controls { padding: 14px 20px;}
+      .bottom-controls-inner { flex-wrap: wrap; justify-content: center; }
+      .step-indicator { order: -1; width: 100%; text-align: center; margin-bottom: 2px;}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Header -->
+  <header class="app-header" role="banner">
+    <div class="header-left">
+      <span class="badge">Optional Briefing</span>
+      <h1 id="header-session-title" class="header-title">Council Briefing</h1>
+    </div>
+    <div class="header-right">
+      Source: <span>synthesizer.md</span>
+    </div>
+  </header>
+
+  <div class="app-container">
+    <!-- Navigation Sidebar -->
+    <nav class="sidebar" aria-label="Briefing Steps">
+      <ul id="nav-list" class="nav-list">
+        <!-- Injected via JS -->
+      </ul>
+      <div class="sidebar-footer">
+        <span id="nav-step-indicator">Step 1 of 8</span>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-area" tabindex="-1">
+      <div id="content-sections" class="content-wrapper" aria-live="polite">
+        <!-- Injected via JS -->
+      </div>
+      <!-- Footer Navigation Controls -->
+      <footer class="bottom-controls">
+        <div class="bottom-controls-inner">
+          <button id="prev-btn" class="ctrl-btn" aria-label="Previous step">Previous Step</button>
+          <div class="bottom-actions">
+            <span class="step-indicator" id="bottom-step-indicator">Step 1 of 8</span>
+          <button id="next-btn" class="ctrl-btn" aria-label="Next step">Next Step</button>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <!-- Footer Navigation Controls -->
+  <!-- Bottom nav controls are inside the main wrapper via render -->
+
+  <!-- Bottom Truth Strip -->
+  <footer class="truth-strip-footer">
+    <p>Official source of truth: <code>synthesizer.md</code> + session markdown.</p>
+    <p>Council • v2.1.0-STABLE</p>
+  </footer>
+
+  <!-- Session Data Payload -->
+<script type="application/json" id="council-summary">
 {
   "session": {
     "title": "council.md Self-Review",
@@ -278,7 +535,7 @@
                     <div class="agent-lens">${a.lens}</div>
                   </div>
                   <div>
-                    <span class="confidence-badge badge-${a.confidence.toLowerCase()}">${a.confidence} CONFIDENCE</span>
+                    <span class="confidence-badge badge-${String(a.confidence || 'unknown').toLowerCase().split(/\s+/)[0]}">${a.confidence || 'UNKNOWN'} CONFIDENCE</span>
                   </div>
                 </div>
                 
@@ -352,26 +609,43 @@
           <h2 class="step-title" style="margin-bottom:8px;">Top Kill Risks</h2>
           <p style="margin-bottom:32px; font-size:1rem; color:var(--text-muted); font-weight:300;">The primary mechanisms by which this decision fails catastrophically.</p>
           <div>
-            ${(data.topKillRisks.length ? data.topKillRisks.map(r => `
+            ${(data.topKillRisks.length ? data.topKillRisks.map((rawRisk, idx) => {
+              const r = {
+                rank: rawRisk.rank || idx + 1,
+                title: rawRisk.title || `Risk ${idx + 1}`,
+                verdict: rawRisk.verdict || 'unknown',
+                why: rawRisk.why || rawRisk.summary || rawRisk.description || '',
+                quote: rawRisk.quote || ''
+              };
+              return `
               <div class="risk-item ${r.rank === 1 ? 'risk-item-1' : ''}">
                 <div class="risk-rank ${r.rank === 1 ? 'risk-rank-1' : ''}">#${r.rank}</div>
                 <div class="risk-content">
                   <div class="risk-header">
                     <div class="risk-title">${r.title}</div>
-                    <div class="verdict ${r.verdict.toLowerCase()}">${r.verdict}</div>
+                    <div class="verdict ${String(r.verdict).toLowerCase()}">${r.verdict}</div>
                   </div>
                   <p style="margin-bottom:16px; font-size:1.05rem; color:#444;">${r.why}</p>
-                  <div class="serif-quote" style="font-size:1.05rem; margin:0;">"${r.quote}"</div>
+                  ${r.quote ? `<div class="serif-quote" style="font-size:1.05rem; margin:0;">"${r.quote}"</div>` : ''}
                 </div>
               </div>
-            `).join('') : `<div class="briefing-card"><p style="font-size:0.95rem; color:#555;">This session did not include a top-kill-risks section.</p></div>`)}
+            `}).join('') : `<div class="briefing-card"><p style="font-size:0.95rem; color:#555;">This session did not include a top-kill-risks section.</p></div>`)}
           </div>
         `,
         paths: () => `
           <div class="step-label">Stage 6 of 8</div>
           <h2 class="step-title">Candidate Paths <span style="font-weight:400; font-size:1.1rem; color:var(--text-muted); font-family:var(--font-sans); display:block; margin-top:8px;">Council leans (not crowned winners)</span></h2>
           <div>
-            ${(data.candidatePaths.length ? data.candidatePaths.map(p => `
+            ${(data.candidatePaths.length ? data.candidatePaths.map((rawPath, idx) => {
+              const p = {
+                name: rawPath.name || rawPath.title || `Candidate path ${idx + 1}`,
+                summary: rawPath.summary || rawPath.description || '',
+                pros: Array.isArray(rawPath.pros) ? rawPath.pros : [],
+                cons: Array.isArray(rawPath.cons) ? rawPath.cons : [],
+                preconditions: Array.isArray(rawPath.preconditions) ? rawPath.preconditions : [],
+                leansFrom: Array.isArray(rawPath.leansFrom) ? rawPath.leansFrom : []
+              };
+              return `
               <div class="path-card">
                 <div class="path-header">
                   <h3 class="path-title">${p.name}</h3>
@@ -391,10 +665,10 @@
                   </div>
                 </div>
                 <div style="background:#F9F9F8; padding:16px; border-radius:6px; font-size:0.95rem; border:1px solid #E5E5E0; margin-top:16px;">
-                  <strong style="color:#444;">Required Preconditions:</strong> ${p.preconditions.join(', ')}
+                  <strong style="color:#444;">Required Preconditions:</strong> ${p.preconditions.length ? p.preconditions.join(', ') : 'None specified'}
                 </div>
               </div>
-            `).join('') : `<div class="briefing-card"><p style="font-size:0.95rem; color:#555;">No candidate paths were included in the summary payload.</p></div>`)}
+            `}).join('') : `<div class="briefing-card"><p style="font-size:0.95rem; color:#555;">No candidate paths were included in the summary payload.</p></div>`)}
           </div>
         `,
         'open-questions': () => `
@@ -454,7 +728,12 @@
         const sec = document.createElement('article');
         sec.id = `step-${idx}`;
         sec.className = 'step-content';
-        sec.innerHTML = renderHelpers[step.id] ? renderHelpers[step.id]() : `<h2>${step.title}</h2><p>Content goes here.</p>`;
+        try {
+          sec.innerHTML = renderHelpers[step.id] ? renderHelpers[step.id]() : `<h2>${step.title}</h2><p>Content goes here.</p>`;
+        } catch (e) {
+          console.error(`Failed to render summary section: ${step.id}`, e);
+          sec.innerHTML = `<h2>${step.title}</h2><p style="color:red;">This section could not render. Check the Summary UI Data payload shape in synthesizer.md.</p>`;
+        }
         contentSections.appendChild(sec);
       });
 
